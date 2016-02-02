@@ -1,5 +1,6 @@
 <?php
-	/*Simple PHP-Script to connect to the MySQL-DB to load all the website content stored in there.*/
+	/*Simple PHP-Script to connect to the MySQL-DB to load all the website content stored in there
+	and return the results either as JSON or as plain text(html-content).*/
 	
 	if( isset($_GET['postId']) ) {
 		getPostContentFromSpecificPost($_GET['postId']);
@@ -15,10 +16,7 @@
 				break;
 			
 			case 'post_date':
-				$sql = "select id_post, author, post_date, start_date_country, end_date_country, locale, caption, country from post 
-						JOIN post_i18n using (id_post) 
-						join post_en_meta_data using (id_post_i18n)
-						ORDER BY post.post_date desc;";
+				$sql = "select * from view_english_post_meta_data_by_post_date;";
 				break;
 
 			default:
@@ -33,18 +31,18 @@
 		    }
 		}
 
+		$result->free();
+		$conn->close();
 		echo json_encode($jsonResult);
 	}
 
 
 	function getPostContentFromSpecificPost($postId) {
 		$conn = connectToDB();
-			$sql = "SELECT content FROM post 
-				JOIN post_language USING (id_post)
-				JOIN post_meta_data USING (id_post_language)
-				JOIN post_text_content USING (id_post_language)
-				WHERE id_post = '$postId'";
-			
+			$sql = "select content from view_english_post_content where id_post = '$postId'";
+
+			// in case the server-setting for the client is not set to utf8 charset....bad for chinese :-p
+			//mysqli_set_charset($conn,"utf8");
 			$result = $conn->query($sql);
 
 			$content = "";
@@ -55,6 +53,8 @@
 			    }
 			}
 
+			$result->free();
+			$conn->close();
 			echo $content;
 	}
 
@@ -69,35 +69,4 @@
 		return $conn;
 	}
 
-	/*
-	function getPageData($pageName) {
-		$conn = connectToDB();
-		//$sql = "SELECT * FROM posts WHERE title = '$pageName'";
-		$sql = "SELECT * FROM posts WHERE title = 'hongkong'";
-		$result = $conn->query($sql);
-
-		$content = "";
-
-		if ($result->num_rows > 0) {
-		    while($row = $result->fetch_assoc()) {
-		        $content .= "<p>" . $row["content"] . "</p> \n\n";
-		    }
-		}
-
-		$html = '<p>' . $pageName . "</p> \n\n";
-		$html .= $content;
-
-		$conn->close();
-		echo $html;
-	}
-
-	function connectToDB() {
-		//$conn = new mysqli('localhost', 'travelSelectUser', 'travel', 'test_db');
-		$conn = new mysqli('ldenkewi-it.de', 'cu-de_test1234', 'Test1234!', 'cu-denkewitzlars01_test');
-		if($conn->connection_error){
-			exit();
-		}
-		return $conn;
-	}
-	*/
 ?>
