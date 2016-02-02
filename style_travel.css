@@ -1,0 +1,231 @@
+
+ /************************************************************************** 
+ *	GLOBAL_DEFINES 
+ **************************************************************************/
+
+body {
+	font-family: calibri, arial, helvetica, verdana, tahoma, sans-serif;
+	margin-top: 0px;
+	margin-bottom: 10px;
+	margin-right: 2px;
+	margin-left: 2px;
+	background-color: white;
+	/*
+	background-image: url(images/bg2.jpg);
+	background-repeat: repeat-x;
+	*/
+}
+
+table,td {
+	line-height: 130%;
+}
+
+h1 {
+	padding: 0.7em;
+	margin: 0;
+	font-family: "Trebuchet MS", calibri, arial, helvetica, verdana, tahoma, sans-serif;
+	letter-spacing: 7px;
+	font-size: 2.8em;
+}
+
+h2 {
+	color: white; 
+	padding: 0;
+	margin: 0;
+	padding-top: 20px;
+	padding-bottom: 15px;
+	letter-spacing: 2px;
+	font-size: 2.5em;
+}
+
+h3 {
+
+	font-size: 1.8em;
+	text-align: left;
+}
+
+/* default look of links */
+a:link, a:visited, a:active {
+	font-size: 1.05em;
+	font-family: calibri, arial, helvetica, verdana, tahoma, sans-serif;
+	color: black;
+}
+
+a:hover {
+	text-decoration: none;
+	color: silver;
+	font-weight: bold;
+}
+
+/************************************************************************** 
+ *	HEAD_PART 
+ **************************************************************************/
+ #body_table {
+ 	max-width:800px; 
+ 	min-width: 600px;
+ 	/*
+ 	width:70%; 
+ 	margin-right:15%;
+ 	margin-left:15%;
+ 	min-width: 700px; 
+ 	max-width: 1024px;
+ 	*/
+ }
+
+#head_table_home, #head_table_about {
+	height: 450px;
+	background-image: url(images/P1030613x.jpg);
+	/* P1030711x, P1030613x */
+	border-right: solid 0px;
+	border-left: solid 0px; /*no borders*/
+	color: rgb(40, 60, 35);
+	table-layout:auto;
+}
+
+#head_table_about {
+	background-image: url(images/P1030711x.jpg);
+}
+
+#title_td_home, #title_td_about {
+	padding-left: 15px; 
+	padding-right: 15px; 
+	padding-top: 5px; 
+	text-align: left;
+}
+
+#title_td_about {
+	text-align: right;
+}
+
+#title_span {
+	color: silver;
+	letter-spacing: 2px;
+	font-size: 1.8em;
+}
+
+
+
+
+/************************************************************************** 
+ *	MENU_BAR 
+ **************************************************************************/
+
+#menu_bar_cell, #second_menu_bar_cell {
+	background-color: black;
+	height: 32px;
+	opacity: 0.40;					/* usual browser */
+	-moz-opacity: 0.40; 			/* netscape transparency*/
+	filter: Alpha(opacity =   40); 	/* IE 5-7 transparency*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; /* IE 8 transparency*/
+}
+
+#second_menu_bar_cell {
+	height: 22px;
+}
+
+#menu_bar_table a, #menu_bar_table a:visited, #menu_bar_table a:active, #second_menu_bar_table a, #second_menu_bar_table a:visited, #second_menu_bar_table a:active {
+	display: block; /* link the hole table cell */
+	color: white;
+	text-decoration: none;
+	font-family: verdana, sans-serif;
+	font-size: 1.1em;
+	border-left: 1px solid white;
+	border-bottom: 1px solid white;
+	border-top: 1px solid white;
+	line-height: 32px;
+	text-align: center;
+}
+
+#second_menu_bar_table a, #second_menu_bar_table a:visited, #second_menu_bar_table a:active {
+	font-size: 1em;
+	line-height: 24px;
+	border-top: 0px;
+}
+
+#menu_bar_table a:hover, #second_menu_bar_table a:hover {
+	background-color: white;
+	color: black;
+	text-decoration: none;
+	border-left: 1px solid black;
+	border-bottom: 1px solid black;
+	font-style: italic;
+	opacity: 0.90;
+	-moz-opacity: 0.90; /* mozilla transparency*/
+	filter: Alpha(opacity =   90); /* IE transparency*/
+}
+
+
+/************************************************************************** 
+ *	MAIN_PART 
+ **************************************************************************/
+
+#main_table {
+	text-align: center;
+	/*no borders*/
+	border-right: solid 0px;
+	border-left: solid 0px;
+	border: 0;
+	width: 100%
+}
+
+#main_cell {
+	text-align: justify;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+
+
+
+
+/************************************************************************** 
+ *	CONTENT-PART 
+ **************************************************************************/
+.country_table {
+	border: 1px ridge black;
+	text-align: center;
+	background-color: grey;
+	padding-right: 5px;
+	/*#E5E5E5;*/
+}
+
+.country_metadata_td {
+	font-size: 0.9em;
+	font-style: italic; 
+	text-align: right;
+}
+
+.post_metadata_p {
+	font-style:italic; 
+	text-decoration: underline; 
+	font-size:0.9em;
+}
+
+
+
+/************************************************************************** 
+ *	FOOTER_PART 
+ **************************************************************************/
+#footer_cell {
+	font: normal 0.9em verdana, sans-serif;
+	color:gray;
+	text-align: center;
+	padding-bottom: 10px;
+}
+
+#footer_hr_40 {
+	width: 40%; 
+	height: 1px;
+	color: rgba(192, 192, 192, 0.5); 
+	margin: 0 auto;
+}
+
+#footer_hr_80 {
+	width: 80%; 
+	height: 1px;
+	color: rgba(192, 192, 192, 0.5);
+}
+
+
+
