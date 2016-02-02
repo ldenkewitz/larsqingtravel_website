@@ -1,17 +1,20 @@
 var htmlLoadingMessage = '<p class="loadingMessage"><img src="images/ajax-loader.gif" alt="ajax-loader">loading the content...</p>';
 var loadingMessageClass = 'loadingMessage';
-var htmlPostContentDiv = '<div class="post_content"></div>';
 var postContentClass = 'post_content';
 var closedPostClass = 'closed';
 var openedPostClass = 'opened';
 
 $(document).ready(function(){
 
+	// read URL-data or anything else, default is metaDataType = start_date
+	loadAllPosts("start_date");
+	//loadAllPosts("post_date");
+
 	/***********************************************
 		HANDLER FOR OPENING / CLOSING THE POSTs
 	************************************************/
-	$('a.post').click(function() {
-		linkName = $(this).attr('href');
+	$('div.post').click(function() {
+		linkName = $(this).attr('data-link');
 		referencedPostLink = $(this);
 
 		// WHEN THIS POST IS STILL CLOSED
@@ -33,7 +36,7 @@ $(document).ready(function(){
 			referencedPostLink.toggleClass(closedPostClass).toggleClass(openedPostClass);
 			
 			// SHOW LOADING MESSAGE
-			referencedPostLink.children("span").text('-');
+			referencedPostLink.children("span.open_indicator").text('-').css("background-color", "silver").css("padding", "0px 12px 3px 12px");
 			referencedPostLink.after(htmlLoadingMessage);
 			$('.'+loadingMessageClass).show(400, function() {
 
@@ -46,6 +49,9 @@ $(document).ready(function(){
 						$(this).remove();
 						
 						// DISPLAY THE CONTENT OF THE POST
+						var htmlPostContentDiv = '<div class="post_content"></div>';
+						var htmlPostContentFooterDiv = '<div class="post_footer"></div>';
+
 						$(referencedPostLink).after(htmlPostContentDiv);
 						$('.post_content').html(data).show(1250, function() {
 
@@ -54,6 +60,10 @@ $(document).ready(function(){
 								cleanReturnUrl('#' + referencedPostLink.attr('name'));
 							}
 						});
+
+						$('.post_content').append(htmlPostContentFooterDiv);
+						//<p><strong>Columbia - November 2015 to February 2016</strong></p>
+						$('.post_footer').html('<a href="http://www.google.com"> > Find more pictures from <strong> Colombia </strong> on our flickr album</a>');
 					});
 				
 				}).fail(function(data) {
@@ -90,7 +100,7 @@ $(document).ready(function(){
 */
 function closeAndRemovePostContent(referencedPostLink, classToClose, hideDuration) {
 	$(referencedPostLink).toggleClass(openedPostClass).toggleClass(closedPostClass);
-	$(referencedPostLink).children('span').text('+');
+	$(referencedPostLink).children('span.open_indicator').text('+').css("background-color", "#e5e5e5").css("padding", "0px 10px 3px 10px");
 	// DELETE LOADING MESSAGE
 	$('.'+classToClose).hide(hideDuration, function() {
 		$(this).remove();
@@ -117,27 +127,6 @@ function cleanReturnUrl(innerLink) {
 
 function getPostContentFromFilesAsync(referencedPostLink) {
 	return $.get(linkName)
-/*		if(success == 'success') {
-
-			// NOW UNLOAD THE LOADING MESSAGE
-			$('.'+loadingMessageClass).hide(400, function() {
-				$(this).remove();
-				
-				// DISPLAY THE CONTENT OF THE POST
-				$(referencedPostLink).after(htmlPostContentDiv);
-				$('.post_content').html(data).show(1250, function() {
-
-					// SET BROWSER URL TO THE ACTUAL POST-ADDRESS
-					if( referencedPostLink.attr('name') ) {
-						cleanReturnUrl('#' + referencedPostLink.attr('name'));
-					}
-				});
-			});
-		}
-	}).error(function(){
-		alert('You are trying to open a page that apparently does not exist.');
-		closeAndRemovePostContent($('.'+openedPostClass), loadingMessageClass, 400);
-	});*/
 }
 
 /**
@@ -147,15 +136,104 @@ function getPostContentFromFilesAsync(referencedPostLink) {
 	param - parameter for the DB-select
 */
 function getPostContentFromDBAsync(param) {
-	return $.get( 'php/phpScript.php', { page_name: param });
+	return $.get( 'php/phpScript.php', { postId: param });
 }
-	/**
-		To handle the result in JSON
 
-		$.get( "test.php", function( data ) {
-		  $( "body" )
-	    	.append( "Name: " + data.name ) // John
-	    	.append( "Time: " + data.time ); //  2pm
-		}, "json" );
-	*/
+/**
+	Load all posts with their meta data from the DB/PHP.
 
+	@parameters:
+	metaDataType - string that describes, what metaData and what order are loaded and how the page is going to be build up
+*/
+function getAllPostsAndMetaDataFromDBAsync(metaDataType) {
+	var json = $.getJSON( 'php/phpScript.php', { metaData: metaDataType } );
+	return json;
+}
+
+/**
+	Load all posts with their meta data from the DB.
+	After this, build up the page by adding alle the HTML-elements, coming via JSON from the DB/PHP.
+	Regarding to @metaDataType the page-construction-process differs...
+	The right order is already given by the DB via the specific View.
+
+	@parameters:
+	metaDataType - string that describes, what metaData and what order are loaded and how the page is going to be build up
+*/
+function loadAllPosts(metaDataType) {
+	getAllPostsAndMetaDataFromDBAsync(metaDataType)
+	.done(function(data) {
+
+		// ORDER BY START DATE, GROUP BY COUNTRY
+		if(metaDataType == 'start_date') {
+
+			var articleClass = "";
+			var start_date, end_date, article_id, post_div_id, post_date, date_range;
+			$.each(data ,function( index, value ) {
+
+				if( articleClass != value.country ) {
+					start_date = moment(value.start_date_country);
+					end_date = moment(value.end_date_country);
+					articleClass = value.country;
+					article_id = value.country.replace(" ", "_")+"_"+start_date.format("MM-YYYY");
+
+					// building the article
+
+					// if the trip was in beneath the same month of the same year
+					if(start_date.year() == end_date.year() && start_date.month() == end_date.month()) {
+						date_range = start_date.format("MMM YYYY");
+					}else{
+						date_range = start_date.format("MMM YYYY")+" - "+end_date.format("MMM YYYY");
+					}
+
+					$("<article>", {class: "date_and_country", id: article_id }).append(
+						$("<h3>").html(date_range+" <small><i> ("+value.country+")</i></small>")
+					).appendTo("div#main");
+				}
+
+				// building the section
+
+				post_date = moment(value.post_date);
+
+				$("<section>", {class: "post"}).append(
+					$("<div>", {class: "post closed", id: "post_"+value.id_post }).attr("data-post-id", value.id_post).append(
+						$("<span>", {class: "open_indicator"}).text("+")).append(
+						$("<span>", {class: "post_caption"}).text(value.caption)).append(
+						$("<div>", {class: "post_metadata"}).append(
+							$("<p>", {class: "post_metadata"}).text(value.author+" | "+post_date.format("LL"))
+						)
+					)
+				).appendTo("#"+article_id); 
+			});
+			
+		// ORDER BY POST DATE, SECOND ORDER BY COUNTRY
+		} else if(metaDataType == 'post_date') {
+
+			var post_date;
+
+			$("<article>", {class: "post_date" }).append(
+					$("<h3>").text("sorted by date of post...")
+				).appendTo("div#main");
+
+			$.each(data ,function( index, value ) {
+				
+				// building the section
+
+				post_date = moment(value.post_date);
+
+				$("<section>", {class: "post"}).append(
+					$("<div>", {class: "post closed", id: "post_"+value.id_post }).attr("data-post-id", value.id_post).append(
+						$("<span>", {class: "open_indicator"}).text("+")).append(
+						$("<span>", {class: "post_caption"}).text(value.caption)).append(
+						$("<div>", {class: "post_metadata"}).append(
+							$("<p>", {class: "post_metadata"}).html(value.country+" | "+value.author+" | <strong>"+post_date.format("LL")+"</strong>")
+						)
+					)
+				).appendTo("article.post_date"); 
+			});
+
+		}
+	
+	}).fail(function(data) {
+		alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
+	});
+}
