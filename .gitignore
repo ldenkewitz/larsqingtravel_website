@@ -1,5 +1,6 @@
 .ignoredFolder
 .comments
+*.sublime-workspace
 
 # Compiled source #
 ###################
