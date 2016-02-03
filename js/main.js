@@ -183,7 +183,7 @@ function loadAllPosts(metaDataType) {
 					}
 
 					$("<article>", {'class': "date_and_country", id: article_id }).append(
-						$("<h3>").html(date_range+" <small><i> ("+value.country+")</i></small><img alt='' src='../images/flags/32/"+value.country+".png'>")).appendTo("div#main");
+						$("<h3>").html(date_range+" <em>("+value.country+")<img alt='' src='../images/flags/32/"+value.country+".png'></em>")).appendTo("div#main");
 				}
 
 				// building the section
