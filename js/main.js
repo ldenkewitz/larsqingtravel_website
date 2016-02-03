@@ -62,7 +62,7 @@ function clickOnPostHandler(referencedPost) {
 					$(this).remove();
 					
 					// DISPLAY THE CONTENT OF THE POST
-					var htmlPostContentFooterDiv = $('<footer>').html('<a href='+referencedPost.attr("data-flickr-address") +'> > Find more pictures from <strong>'+referencedPost.attr("data-country")+'</strong> on our flickr album</a>');
+					var htmlPostContentFooterDiv = $('<footer>').html('<hr><a href='+referencedPost.attr("data-flickr-address") +'> > Find more pictures from <strong>'+referencedPost.attr("data-country")+'</strong> on our flickr album</a>');
 					var htmlPostContentDiv = $('<div>', { 'class': "post_content"}).html(data).append(htmlPostContentFooterDiv);
 					$(referencedPost).after(htmlPostContentDiv);
 					htmlPostContentDiv.show(1250);

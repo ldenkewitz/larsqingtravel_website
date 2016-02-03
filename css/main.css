@@ -66,8 +66,7 @@ a{color: #000000; text-decoration:none; outline: none;
 a:hover{color:#ff5100; text-decoration:none;}
 
 /* HEADER SETTINGS */
-header{width: 100%; height: 400px; margin-bottom: 10px; padding-top: 1px; 
-    background: url(../images/header_picture_homepage.jpeg) no-repeat, transparent; background-size: cover; background-position: center top;
+header{width: 100%; height: 400px; margin-bottom: 10px; padding-top: 1px; background: url(../images/header_picture_homepage.jpeg) no-repeat, transparent; background-size: cover; background-position: center top;
     -webkit-box-shadow: 2px 2px 3px 2px #4D4D4D; box-shadow: 2px 2px 3px 2px #4D4D4D;
     -webkit-border-radius: 0 0 10px 10px; border-radius: 0 0 10px 10px;}
 header h2{margin: 220px 0 0 50px; text-align: left; font-size: 220%; padding: 0 0 0 0; width: 300px; z-index: 0;
@@ -106,7 +105,7 @@ nav a.about_btn{-webkit-border-radius: 0 0 20px 0; border-radius: 0 0 20px 0;}
 
 
 #main article section.post div.post_content{display: none; padding: 10px 50px 25px 50px;}
-#main article section.post div.post_content footer{border-top: 1px solid silver; width: 100%; font-size: 0.85em; color: #666; margin-top: 10px; padding-top: 10px;}
+#main article section.post div.post_content footer{width: 100%; font-size: 0.85em; color: #666; margin-top: 10px; padding-top: 10px;}
 #main article section.post div.post_content footer a{color: #666; text-decoration: underline;}  
 #main article section.post div.post_content footer a:hover{color:#ff5100;}
 
@@ -115,8 +114,8 @@ nav a.about_btn{-webkit-border-radius: 0 0 20px 0; border-radius: 0 0 20px 0;}
     -webkit-border-radius: 10px 10px 5px 5px; border-radius: 10px 10px 5px 5px; -webkit-box-shadow:inset 0 0 1px 0 #4D4D4D; box-shadow:inset 0 0 1px 0 #4D4D4D; cursor: pointer;
     -webkit-transition:all 750ms linear; -moz-transition:all 750ms linear; -o-transition:all 750ms linear; transition:all 750ms linear;}
 #main article section.post div.post:hover{background-color: silver; color:#ff5100; }
-#main article section.post div span.open_indicator{ border-radius: 50%; box-shadow: 0px 0px 1px #333; padding: 0px 10px 3px 10px; border: 1px solid #555; background-color: #e5e5e5; font-weight: bold; }
-#main article section.post div span.post_caption{ margin: 0 0 0 5px;}
+#main article section.post div span.open_indicator{border-radius: 50%; box-shadow: 0px 0px 1px #333; padding: 0px 10px 3px 10px; border: 1px solid #555; background-color: #e5e5e5; font-weight: bold; }
+#main article section.post div span.post_caption{margin: 0 0 0 5px;}
 #main article section.post div div.post_metadata{float:right;}
 #main article section.post div div p.post_metadata{font-size:65%; color:gray;margin: 7px 0 0 0;letter-spacing: -0.7px;}
 
