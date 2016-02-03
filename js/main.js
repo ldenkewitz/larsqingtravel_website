@@ -20,6 +20,7 @@ $(document).ready(function(){
 	});
 });
 
+
 /**
 	Handels all the stuff that happens, when a post is clicked:
 	- loading the post content or closing it
@@ -32,8 +33,6 @@ $(document).ready(function(){
 	referencedPost - the "clicked" post
 */
 function clickOnPostHandler(referencedPost) {
-
-	linkName = $(this).attr('data-link');
 
 	// WHEN THIS POST IS STILL CLOSED
 	if ( referencedPost.hasClass(closedPostClass) ) {
@@ -68,26 +67,6 @@ function clickOnPostHandler(referencedPost) {
 					var htmlPostContentDiv = $('<div>', { class: "post_content"}).html(data).append(htmlPostContentFooterDiv);
 					$(referencedPost).after(htmlPostContentDiv);
 					htmlPostContentDiv.show(1250);
-
-					console.log(data);
-
-		/*			// DISPLAY THE CONTENT OF THE POST
-					var htmlPostContentDiv = '<div class="post_content"></div>';
-					var htmlPostContentFooterDiv = '<div class="post_footer"></div>';*/
-
-	//				$(referencedPostLink).after($("<div>", { class: "post_content"}));
-/*					$('.post_content').html(data).show(1250, function() {
-
-						// SET BROWSER URL TO THE ACTUAL POST-ADDRESS
-						if( referencedPostLink.attr('name') ) {
-							cleanReturnUrl('#' + referencedPostLink.attr('name'));
-						}
-					});
-
-					$('.post_content').append(htmlPostContentFooterDiv);
-					//<p><strong>Columbia - November 2015 to February 2016</strong></p>
-					$('.post_footer').html('<a href="http://www.google.com"> > Find more pictures from <strong> Colombia </strong> on our flickr album</a>');
-*/
 				});
 			});
 		});
@@ -107,55 +86,8 @@ function clickOnPostHandler(referencedPost) {
 	// NOTHING TO RETURN -> NO LINK RESOLUTION
 	return false;
 }
-/*
-			// LOAD THE CONTENT
-//				getPostContentFromDBAsync('hongkong')
-			getPostContentFromFilesAsync(linkName)
-			.done(function(data) {
-				// NOW UNLOAD THE LOADING MESSAGE
-				$('.'+loadingMessageClass).hide(400, function() {
-					$(this).remove();
-					
-					// DISPLAY THE CONTENT OF THE POST
-					var htmlPostContentDiv = '<div class="post_content"></div>';
-					var htmlPostContentFooterDiv = '<div class="post_footer"></div>';
-
-					$(referencedPost).after(htmlPostContentDiv);
-					$('.post_content').html(data).show(1250, function() {
-
-						// SET BROWSER URL TO THE ACTUAL POST-ADDRESS
-						if( referencedPost.attr('name') ) {
-							cleanReturnUrl('#' + referencedPost.attr('name'));
-						}
-					});
-
-					$('.post_content').append(htmlPostContentFooterDiv);
-					$('.post_footer').html('<a href="http://www.google.com"> > Find more pictures from <strong> Colombia </strong> on our flickr album</a>');						
-				});
-			
-			}).fail(function(data) {
-				alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
-				closeAndRemovePostContent(referencedPost, loadingMessageClass, 400);
-			});
-		});
 
 
-	// IF THE POST WAS ALREADY OPENED 
-	} else if ( referencedPost.hasClass(openedPostClass) ) {
-		
-		// REMOVE LOADING-MESSAGE
-		if ( $('.'+loadingMessageClass).length !== 0 ) {
-			closeAndRemovePostContent(this, loadingMessageClass, 400);
-		
-		// REMOVE POST-CONTENT
-		} else if($('div.'+postContentClass).length !== 0) {
-			closeAndRemovePostContent(this, postContentClass, 600);
-		}
-	}
-	// NOTHING TO RETURN -> NO LINK RESOLUTION
-	return false;
-}
-*/
 /**
 	Hides and removes the content of a post or the loading message when loading the post-content 
 
