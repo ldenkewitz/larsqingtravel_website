@@ -96,7 +96,7 @@ nav a.about_btn{-webkit-border-radius: 0 0 20px 0; border-radius: 0 0 20px 0;}
 #main article{ padding: 10px 20px 20px 20px; margin-bottom: 40px;
     -webkit-box-shadow: 1px 1px 1px 1px #4D4D4D; box-shadow: 1px 1px 5px -2px #4D4D4D;}
 #main article h3{font-size: 180%; margin: 10px 0 5px 0; text-align: right;}
-#main article h3 img{margin-left: 10px}
+#main article h3 img{margin-left: 10px; vertical-align: text-bottom}
 
 /* POST SETTINGS */
 
