@@ -62,9 +62,8 @@ function clickOnPostHandler(referencedPost) {
 					$(this).remove();
 					
 					// DISPLAY THE CONTENT OF THE POST
-					var htmlPostContentFooterDiv = $('<div>', { class: "post_footer"}).html('<a href='+referencedPost.attr("data-flickr-address")
-						+'> > Find more pictures from <strong>'+referencedPost.attr("data-country")+'</strong> on our flickr album</a>');
-					var htmlPostContentDiv = $('<div>', { class: "post_content"}).html(data).append(htmlPostContentFooterDiv);
+					var htmlPostContentFooterDiv = $('<footer>').html('<a href='+referencedPost.attr("data-flickr-address") +'> > Find more pictures from <strong>'+referencedPost.attr("data-country")+'</strong> on our flickr album</a>');
+					var htmlPostContentDiv = $('<div>', { 'class': "post_content"}).html(data).append(htmlPostContentFooterDiv);
 					$(referencedPost).after(htmlPostContentDiv);
 					htmlPostContentDiv.show(1250);
 				});
@@ -125,7 +124,7 @@ function closeAndRemovePostContent(referencedPost, classToClose, hideDuration) {
 */
 
 function getPostContentFromFilesAsync(referencedPost) {
-	return $.get(linkName)
+	return $.get(linkName);
 }
 
 /**
@@ -159,8 +158,7 @@ function getAllPostsAndMetaDataFromDBAsync(metaDataType) {
 	metaDataType - string that describes, what metaData and what order are loaded and how the page is going to be build up
 */
 function loadAllPosts(metaDataType) {
-	getAllPostsAndMetaDataFromDBAsync(metaDataType)
-	.done(function(data) {
+	getAllPostsAndMetaDataFromDBAsync(metaDataType).done(function(data) {
 
 		// ORDER BY START DATE, GROUP BY COUNTRY
 		if(metaDataType == 'start_date') {
@@ -184,22 +182,21 @@ function loadAllPosts(metaDataType) {
 						date_range = start_date.format("MMM YYYY")+" - "+end_date.format("MMM YYYY");
 					}
 
-					$("<article>", {class: "date_and_country", id: article_id }).append(
-						$("<h3>").html(date_range+" <small><i> ("+value.country+")</i></small><img alt='' src='../images/flags/32/"+value.country+".png'>")
-					).appendTo("div#main");
+					$("<article>", {'class': "date_and_country", id: article_id }).append(
+						$("<h3>").html(date_range+" <small><i> ("+value.country+")</i></small><img alt='' src='../images/flags/32/"+value.country+".png'>")).appendTo("div#main");
 				}
 
 				// building the section
 
 				post_date = moment(value.post_date);
 
-				$("<section>", {class: "post"}).append(
-					$("<div>", {class: "post closed", id: "post_"+value.id_post })
+				$("<section>", {'class': "post"}).append(
+					$("<div>", {'class': "post closed", id: "post_"+value.id_post })
 					.attr("data-post-id", value.id_post).attr("data-flickr-address", value.flickr_address).attr("data-country", value.country).append(
-						$("<span>", {class: "open_indicator"}).text("+")).append(
-						$("<span>", {class: "post_caption"}).text(value.caption)).append(
-						$("<div>", {class: "post_metadata"}).append(
-							$("<p>", {class: "post_metadata"}).text(value.author+" | "+post_date.format("LL"))
+						$("<span>", {'class': "open_indicator"}).text("+")).append(
+						$("<span>", {'class': "post_caption"}).text(value.caption)).append(
+						$("<div>", {'class': "post_metadata"}).append(
+							$("<p>", {'class': "post_metadata"}).text(value.author+" | "+post_date.format("LL"))
 						)
 					)
 				).appendTo("#"+article_id); 
@@ -208,11 +205,8 @@ function loadAllPosts(metaDataType) {
 		// ORDER BY POST DATE, SECOND ORDER BY COUNTRY
 		} else if(metaDataType == 'post_date') {
 
-			var post_date;
-
-			$("<article>", {class: "post_date" }).append(
-					$("<h3>").text("sorted by date of post...")
-				).appendTo("div#main");
+			$("<article>", {'class': "post_date" }).append(
+					$("<h3>").text("sorted by date of post...")).appendTo("div#main");
 
 			$.each(data ,function( index, value ) {
 				
@@ -220,13 +214,13 @@ function loadAllPosts(metaDataType) {
 
 				post_date = moment(value.post_date);
 
-				$("<section>", {class: "post"}).append(
-					$("<div>", {class: "post closed", id: "post_"+value.id_post })
+				$("<section>", {'class': "post"}).append(
+					$("<div>", {'class': "post closed", id: "post_"+value.id_post })
 					.attr("data-post-id", value.id_post).attr("data-flickr-address", value.flickr_address).attr("data-country", value.country).append(
-						$("<span>", {class: "open_indicator"}).text("+")).append(
-						$("<span>", {class: "post_caption"}).text(value.caption)).append(
-						$("<div>", {class: "post_metadata"}).append(
-							$("<p>", {class: "post_metadata"}).html(value.country+" | "+value.author+" | <strong>"+post_date.format("LL")+"</strong>")
+						$("<span>", {'class': "open_indicator"}).text("+")).append(
+						$("<span>", {'class': "post_caption"}).text(value.caption)).append(
+						$("<div>", {'class': "post_metadata"}).append(
+							$("<p>", {'class': "post_metadata"}).html(value.country+" | "+value.author+" | <strong>"+post_date.format("LL")+"</strong>")
 						)
 					)
 				).appendTo("article.post_date"); 

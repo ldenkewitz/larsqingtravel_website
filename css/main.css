@@ -106,9 +106,9 @@ nav a.about_btn{-webkit-border-radius: 0 0 20px 0; border-radius: 0 0 20px 0;}
 
 
 #main article section.post div.post_content{display: none; padding: 10px 50px 25px 50px;}
-#main article section.post div.post_content div.post_footer{border-top: 1px solid silver; width: 100%; font-size: 0.85em; color: #666; margin-top: 10px; padding-top: 10px;}
-#main article section.post div.post_content div.post_footer a{color: #666; text-decoration: underline;}  
-#main article section.post div.post_content div.post_footer a:hover{color:#ff5100;}
+#main article section.post div.post_content footer{border-top: 1px solid silver; width: 100%; font-size: 0.85em; color: #666; margin-top: 10px; padding-top: 10px;}
+#main article section.post div.post_content footer a{color: #666; text-decoration: underline;}  
+#main article section.post div.post_content footer a:hover{color:#ff5100;}
 
 
 #main article section.post div.post{background-color: #e5e5e5; margin: 0; font-size: 140%; display: inline-block; width: 840px; padding: 5px 10px 10px 10px; 
@@ -129,8 +129,8 @@ nav a.about_btn{-webkit-border-radius: 0 0 20px 0; border-radius: 0 0 20px 0;}
 #main article section.post p.loadingMessage img{width: 32px; height: 32px; margin: 10px 10px 10px 10px}
 
 /* FOOTER SETTINGS */
-footer{text-align: center; margin: 70px 0 40px 0; color: #666666; font-size: 100%; }
-footer div{border-top:1px solid silver; width:650px; margin: auto; padding-top: 5px;}
+#page_footer{text-align: center; margin: 70px 0 40px 0; color: #666666; font-size: 100%; }
+#page_footer div{border-top:1px solid silver; width:650px; margin: auto; padding-top: 5px;}
 
 
 /* ==========================================================================
