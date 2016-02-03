@@ -12,5 +12,25 @@
 	{
 		"tab_size": 3,
 		"translate_tabs_to_spaces": true
-	}
+	},
+	"SublimeLinter": {
+        "linters": {
+          "jsl": {
+            "@disable": false,
+            "args": [
+              "-conf", "${project}/jsl.conf"
+            ],
+            "chdir": "${project}",
+            "excludes": []
+          },
+          "jslint": {
+            "@disable": false,
+            "args": [
+              "-conf", "${project}/jsl.conf"
+            ],
+            "chdir": "${project}",
+            "excludes": []
+          }
+        }
+      }
 }

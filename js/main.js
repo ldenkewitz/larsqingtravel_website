@@ -56,15 +56,14 @@ function clickOnPostHandler(referencedPost) {
 		referencedPost.children("span.open_indicator").text('-').css("background-color", "silver").css("padding", "0px 12px 3px 12px");
 		referencedPost.after(htmlLoadingMessage);
 		$('.'+loadingMessageClass).show(400, function() {
-			getPostContentFromDBAsync(referencedPost.attr("data-post-id"))
-			.done(function(data) {
+			getPostContentFromDBAsync(referencedPost.attr("data-post-id")).done(function(data) {
 				
 				// NOW UNLOAD THE LOADING MESSAGE
 				$('.'+loadingMessageClass).hide(400, function() {
 					$(this).remove();
 					
 					// DISPLAY THE CONTENT OF THE POST
-					var htmlPostContentFooterDiv = $('<div>', { class: "post_footer" }).html('<a href='+referencedPost.attr("data-flickr-address")
+					var htmlPostContentFooterDiv = $('<div>', { class: "post_footer"}).html('<a href='+referencedPost.attr("data-flickr-address")
 						+'> > Find more pictures from <strong>'+referencedPost.attr("data-country")+'</strong> on our flickr album</a>');
 					var htmlPostContentDiv = $('<div>', { class: "post_content"}).html(data).append(htmlPostContentFooterDiv);
 					$(referencedPost).after(htmlPostContentDiv);
