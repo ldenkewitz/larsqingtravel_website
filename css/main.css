@@ -131,6 +131,7 @@ nav a.about_btn{-webkit-border-radius: 0 0 20px 0; border-radius: 0 0 20px 0;}
 /* FOOTER SETTINGS */
 #page_footer{text-align: center; margin: 70px 0 40px 0; color: #666666; font-size: 100%; }
 #page_footer div{border-top:1px solid silver; width:650px; margin: auto; padding-top: 5px;}
+#page_footer div img{vertical-align: baseline}
 
 
 /* ==========================================================================

@@ -160,23 +160,26 @@ function getAllPostsAndMetaDataFromDBAsync(metaDataType) {
 function loadAllPosts(metaDataType) {
 	getAllPostsAndMetaDataFromDBAsync(metaDataType).done(function(data) {
 
-		// ORDER BY START DATE, GROUP BY COUNTRY
-		if(metaDataType == 'start_date') {
+		console.log(data);
 
-			var articleClass = "";
+		// ORDER BY START DATE, GROUP BY COUNTRY
+		if(metaDataType === 'start_date') {
+
+			var country = "";
 			var start_date, end_date, article_id, post_div_id, post_date, date_range;
 			$.each(data ,function( index, value ) {
 
-				if( articleClass != value.country ) {
+				// if new article - grounped by country
+				if( country != value.country ) {
 					start_date = moment(value.start_date_country);
 					end_date = moment(value.end_date_country);
-					articleClass = value.country;
+					country = value.country;
 					article_id = value.country.replace(" ", "_")+"_"+start_date.format("MM-YYYY");
 
 					// building the article
 
 					// if the trip was in beneath the same month of the same year
-					if(start_date.year() == end_date.year() && start_date.month() == end_date.month()) {
+					if(start_date.year() === end_date.year() && start_date.month() === end_date.month()) {
 						date_range = start_date.format("MMM YYYY");
 					}else{
 						date_range = start_date.format("MMM YYYY")+" - "+end_date.format("MMM YYYY");
@@ -184,12 +187,13 @@ function loadAllPosts(metaDataType) {
 
 					$("<article>", {'class': "date_and_country", id: article_id }).append(
 						$("<h3>").html(date_range+" <em>("+value.country+")<img alt='' src='../images/flags/32/"+value.country+".png'></em>")).appendTo("div#main");
-				}
+				} //end if for new country
 
-				// building the section
+				// building the section - each single post
 
 				post_date = moment(value.post_date);
 
+				// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
 				$("<section>", {'class': "post"}).append(
 					$("<div>", {'class': "post closed", id: "post_"+value.id_post })
 					.attr("data-post-id", value.id_post).attr("data-flickr-address", value.flickr_address).attr("data-country", value.country).append(
@@ -203,7 +207,7 @@ function loadAllPosts(metaDataType) {
 			});
 			
 		// ORDER BY POST DATE, SECOND ORDER BY COUNTRY
-		} else if(metaDataType == 'post_date') {
+		} else if(metaDataType === 'post_date') {
 
 			$("<article>", {'class': "post_date" }).append(
 					$("<h3>").text("sorted by date of post...")).appendTo("div#main");
@@ -225,8 +229,7 @@ function loadAllPosts(metaDataType) {
 					)
 				).appendTo("article.post_date"); 
 			});
-
-		}
+		} // end else if for metaDataTyp === 'post_date'
 	
 		//after the elements are added, bind the handler again
 		$('div.post').click(function() {
