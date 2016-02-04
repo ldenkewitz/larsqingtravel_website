@@ -66,9 +66,9 @@ function clickOnPostHandler(referencedPost) {
 					var htmlPostContentDiv = $('<div>', { 'class': "post_content"}).html(data).append(htmlPostContentFooterDiv);
 					$(referencedPost).after(htmlPostContentDiv);
 					htmlPostContentDiv.show(1250);
-				});
-			});
-		});
+				}); // end of hide() - loadingMessage
+			}); // end of asynch done() - contentFromDB
+		}); // end of show() - loadingMessage
 
 	// IF THE POST WAS ALREADY OPENED 
 	} else if ( referencedPost.hasClass(openedPostClass) ) {
@@ -150,7 +150,7 @@ function getAllPostsAndMetaDataFromDBAsync(metaDataType) {
 
 /**
 	Load all posts with their meta data from the DB.
-	After this, build up the page by adding alle the HTML-elements, coming via JSON from the DB/PHP.
+	After this, build up the page via mustacheJS with data coming via JSON from the DB/PHP.
 	Regarding to @metaDataType the page-construction-process differs...
 	The right order is already given by the DB via the specific View.
 
@@ -160,13 +160,14 @@ function getAllPostsAndMetaDataFromDBAsync(metaDataType) {
 function loadAllPosts(metaDataType) {
 	getAllPostsAndMetaDataFromDBAsync(metaDataType).done(function(data) {
 
-		console.log(data);
+		
 
 		// ORDER BY START DATE, GROUP BY COUNTRY
 		if(metaDataType === 'start_date') {
 
 			var country = "";
-			var start_date, end_date, article_id, post_div_id, post_date, date_range;
+			var start_date, end_date, article_id, post_div_id, post_date, date_range, articleTemplate, mustacheHtml, selectionTemplate;
+
 			$.each(data ,function( index, value ) {
 
 				// if new article - grounped by country
@@ -176,8 +177,6 @@ function loadAllPosts(metaDataType) {
 					country = value.country;
 					article_id = value.country.replace(" ", "_")+"_"+start_date.format("MM-YYYY");
 
-					// building the article
-
 					// if the trip was in beneath the same month of the same year
 					if(start_date.year() === end_date.year() && start_date.month() === end_date.month()) {
 						date_range = start_date.format("MMM YYYY");
@@ -185,50 +184,61 @@ function loadAllPosts(metaDataType) {
 						date_range = start_date.format("MMM YYYY")+" - "+end_date.format("MMM YYYY");
 					}
 
-					$("<article>", {'class': "date_and_country", id: article_id }).append(
-						$("<h3>").html(date_range+" <em>("+value.country+")<img alt='' src='../images/flags/32/"+value.country+".png'></em>")).appendTo("div#main");
+					// add the attribute to the object that is used by the template
+					value.date_range = date_range;
+
+					// using the mustache template to build the html for the article					
+					articleTemplate = $('#postArticleTpl').html();
+					mustacheHtml = Mustache.to_html(articleTemplate, value);
+    				$("div#main").append(mustacheHtml);
+
+    				// additional id to add...
+    				$("div#main article").last().attr('id', article_id);
 				} //end if for new country
 
-				// building the section - each single post
-
+				// using the mustache template to build the html for the article
 				post_date = moment(value.post_date);
+				value.post_date = post_date.format("LL");
 
-				// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
-				$("<section>", {'class': "post"}).append(
-					$("<div>", {'class': "post closed", id: "post_"+value.id_post })
-					.attr("data-post-id", value.id_post).attr("data-flickr-address", value.flickr_address).attr("data-country", value.country).append(
-						$("<span>", {'class': "open_indicator"}).text("+")).append(
-						$("<span>", {'class': "post_caption"}).text(value.caption)).append(
-						$("<div>", {'class': "post_metadata"}).append(
-							$("<p>", {'class': "post_metadata"}).text(value.author+" | "+post_date.format("LL"))
-						)
-					)
-				).appendTo("#"+article_id); 
-			});
+				selectionTemplate = $('#postSectionTpl').html();
+				mustacheHtml = Mustache.to_html(selectionTemplate, value);
+				$('#'+article_id).append(mustacheHtml);
+
+				// adding id and some html5 data attributes for later on
+				$('#'+article_id+' section div.post').last()
+					.attr("id", 'post_'+value.id_post)
+					.attr("data-post-id", value.id_post)
+					// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
+					.attr("data-flickr-address", value.flickr_address)
+					.attr("data-country", value.country);
+			}); // end of each() loop
 			
 		// ORDER BY POST DATE, SECOND ORDER BY COUNTRY
 		} else if(metaDataType === 'post_date') {
 
-			$("<article>", {'class': "post_date" }).append(
-					$("<h3>").text("sorted by date of post...")).appendTo("div#main");
+			// using the mustache template to build the html for the article					
+			articleTemplate = $('#postArticleByPostDateTpl').html();
+			mustacheHtml = Mustache.to_html(articleTemplate, data);
+			$("div#main").append(mustacheHtml);
 
 			$.each(data ,function( index, value ) {
 				
-				// building the section
-
+				// using the mustache template to build the html for the article
 				post_date = moment(value.post_date);
+				value.post_date = post_date.format("LL");
 
-				$("<section>", {'class': "post"}).append(
-					$("<div>", {'class': "post closed", id: "post_"+value.id_post })
-					.attr("data-post-id", value.id_post).attr("data-flickr-address", value.flickr_address).attr("data-country", value.country).append(
-						$("<span>", {'class': "open_indicator"}).text("+")).append(
-						$("<span>", {'class': "post_caption"}).text(value.caption)).append(
-						$("<div>", {'class': "post_metadata"}).append(
-							$("<p>", {'class': "post_metadata"}).html(value.country+" | "+value.author+" | <strong>"+post_date.format("LL")+"</strong>")
-						)
-					)
-				).appendTo("article.post_date"); 
-			});
+				selectionTemplate = $('#postSectionByPostDateTpl').html();
+				mustacheHtml = Mustache.to_html(selectionTemplate, value);
+				$("div#main article").append(mustacheHtml);
+
+				// adding id and some html5 data attributes for later on
+				$('div.post').last()
+					.attr("id", 'post_'+value.id_post)
+					.attr("data-post-id", value.id_post)
+					// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
+					.attr("data-flickr-address", value.flickr_address)
+					.attr("data-country", value.country);
+			}); // end of each() loop
 		} // end else if for metaDataTyp === 'post_date'
 	
 		//after the elements are added, bind the handler again
@@ -238,5 +248,5 @@ function loadAllPosts(metaDataType) {
 
 	}).fail(function(data) {
 		alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
-	});
+	}); // end of asynch done() - contentDataFromDB
 }

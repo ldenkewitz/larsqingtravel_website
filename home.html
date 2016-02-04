@@ -26,8 +26,57 @@
 		
 		<div id="main">
 			<!--[if lt IE 8]>
-		        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-		    <![endif]-->
+		    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		  <![endif]-->
+
+      <script id="postArticleTpl" type="text/template"> 
+        <article class="post_date">
+          <h3>{{date_range}} <em>({{country}})<img alt="" src="../images/flags/32/{{country}}.png"></em></h3>
+        </article> 
+      </script>
+
+      <script id="postArticleByPostDateTpl" type="text/template">
+        <article class="date_and_country">
+          <h3>sorted by date of post...</h3>
+        </article>
+      </script>
+
+      <script id="postSectionTpl" type="text/template">
+        <section class="post">
+          <div class="post closed">
+            <span class="open_indicator">+</span>
+            <span class="post_caption">{{caption}}</span>
+            <div class="post_metadata">
+              <p class="post_metadata">{{author}} | {{post_date}}</p>
+            </div>
+          </div>
+        </section>
+      </script>
+
+      <script id="postSectionByPostDateTpl" type="text/template">
+        <section class="post">
+          <div class="post closed">
+            <span class="open_indicator">+</span>
+            <span class="post_caption">{{caption}}</span>
+            <div class="post_metadata">
+              <p class="post_metadata">{{country}} | {{author}} | <strong> {{post_date}} </strong></p>
+            </div>
+          </div>
+        </section>
+      </script>
+<!-- /*
+      <script id="postSectionByPostDateTpl" type="text/template">
+        <section class="post">
+          <div class="post closed">
+            <span class="open_indicator">+</span>
+            <span class="post_caption">{{caption}}</span>
+            <div class="post_metadata">
+              <p class="post_metadata">{{country}} | {{author}} | <strong> {{post_date}} </strong></p>
+            </div>
+          </div>
+        </section>
+      </script>
+*/ -->
 		</div>
 
 		<footer id="page_footer">
