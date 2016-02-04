@@ -44,7 +44,7 @@
       <script id="postSectionTpl" type="text/template">
         <section class="post">
           <div class="post closed">
-            <span class="open_indicator">+</span>
+            <span class="open_indicator closed">+</span>
             <span class="post_caption">{{caption}}</span>
             <div class="post_metadata">
               <p class="post_metadata">{{author}} | {{post_date}}</p>
@@ -56,7 +56,7 @@
       <script id="postSectionByPostDateTpl" type="text/template">
         <section class="post">
           <div class="post closed">
-            <span class="open_indicator">+</span>
+            <span class="open_indicator closed">+</span>
             <span class="post_caption">{{caption}}</span>
             <div class="post_metadata">
               <p class="post_metadata">{{country}} | {{author}} | <strong> {{post_date}} </strong></p>
@@ -64,19 +64,19 @@
           </div>
         </section>
       </script>
-<!-- /*
-      <script id="postSectionByPostDateTpl" type="text/template">
-        <section class="post">
-          <div class="post closed">
-            <span class="open_indicator">+</span>
-            <span class="post_caption">{{caption}}</span>
-            <div class="post_metadata">
-              <p class="post_metadata">{{country}} | {{author}} | <strong> {{post_date}} </strong></p>
-            </div>
-          </div>
-        </section>
+
+      <script id="postContentTpl" type="text/template">
+        <div class="post_content">
+          {{content}}
+          <footer>
+            <hr>
+            {{#flickr_address}}
+            <a href={{flickr_address}}> &raquo; Find more pictures from <b>{{country}}</b> on our flickr album</a>"
+            {{/flickr_address}}
+          </footer>
+        </div>
       </script>
-*/ -->
+
 		</div>
 
 		<footer id="page_footer">

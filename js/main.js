@@ -52,7 +52,7 @@ function clickOnPostHandler(referencedPost) {
 		referencedPost.toggleClass(closedPostClass).toggleClass(openedPostClass);
 		
 		// SHOW LOADING MESSAGE
-		referencedPost.children("span.open_indicator").text('-').css("background-color", "silver").css("padding", "0px 12px 3px 12px");
+		referencedPost.children("span.open_indicator").text('-').toggleClass(closedPostClass).toggleClass(openedPostClass);
 		referencedPost.after(htmlLoadingMessage);
 		$('.'+loadingMessageClass).show(400, function() {
 			getPostContentFromDBAsync(referencedPost.attr("data-post-id")).done(function(data) {
@@ -62,10 +62,16 @@ function clickOnPostHandler(referencedPost) {
 					$(this).remove();
 					
 					// DISPLAY THE CONTENT OF THE POST
-					var htmlPostContentFooterDiv = $('<footer>').html('<hr><a href='+referencedPost.attr("data-flickr-address") +'> > Find more pictures from <strong>'+referencedPost.attr("data-country")+'</strong> on our flickr album</a>');
-					var htmlPostContentDiv = $('<div>', { 'class': "post_content"}).html(data).append(htmlPostContentFooterDiv);
-					$(referencedPost).after(htmlPostContentDiv);
-					htmlPostContentDiv.show(1250);
+					var mustacheParam = {country:referencedPost.attr("data-country")};
+					// flickr-address could be missing, in this case nothing towards the template, there is a condition..
+					if (referencedPost.attr("data-flickr-address")) {
+						mustacheParam.flickr_address = referencedPost.attr("data-flickr-address");
+					}
+					var contentTemplate = $("#postContentTpl").html();
+					var mustacheHtml = Mustache.to_html(contentTemplate, mustacheParam);
+					$(referencedPost).after(mustacheHtml);
+					$("div.post_content").prepend(data);
+					$("div.post_content").show(1250);
 				}); // end of hide() - loadingMessage
 			}); // end of asynch done() - contentFromDB
 		}); // end of show() - loadingMessage
@@ -97,7 +103,7 @@ function clickOnPostHandler(referencedPost) {
 */
 function closeAndRemovePostContent(referencedPost, classToClose, hideDuration) {
 	$(referencedPost).toggleClass(openedPostClass).toggleClass(closedPostClass);
-	$(referencedPost).children('span.open_indicator').text('+').css("background-color", "#e5e5e5").css("padding", "0px 10px 3px 10px");
+	$(referencedPost).children('span.open_indicator').text('+').toggleClass(closedPostClass).toggleClass(openedPostClass);
 	// DELETE LOADING MESSAGE
 	$('.'+classToClose).hide(hideDuration, function() {
 		$(this).remove();
