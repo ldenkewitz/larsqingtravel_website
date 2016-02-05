@@ -40,12 +40,12 @@ function clickOnPostHandler(referencedPost) {
 		// IF THERE IS SOMEWHERE OPEN CONTENT
 
 		// REMOVE LOADING-MESSAGE
-		if ( $('.'+loadingMessageClass).length !== 0 ) {
-			closeAndRemovePostContent($('.'+openedPostClass), loadingMessageClass, 400);
+		if ( $('div.'+loadingMessageClass).length !== 0 ) {
+			closeAndRemovePostContent($('div.'+openedPostClass), loadingMessageClass, 400);
 
 		// REMOVE CONTENT
-		} else if ( $('.'+openedPostClass).length !== 0 ) {
-			closeAndRemovePostContent($('.'+openedPostClass), postContentClass, 600);
+		} else if ( $('div.'+openedPostClass).length !== 0 ) {
+			closeAndRemovePostContent($('div.'+openedPostClass), postContentClass, 600);
 		}
 
 		// CHANGE CLASSES
