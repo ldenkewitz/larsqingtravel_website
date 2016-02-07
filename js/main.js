@@ -7,21 +7,6 @@ var postContentClass = 'post_content';
 var closedPostClass = 'closed';
 var openedPostClass = 'opened';
 
-$(document).ready(function(){
-
-	// read URL-data or anything else, default is metaDataType = start_date
-	loadAllPosts("start_date");
-	//loadAllPosts("post_date");
-
-	/***********************************************
-		HANDLER FOR OPENING / CLOSING THE POSTs
-	************************************************/
-	$('div.post').click(function() {
-		clickOnPostHandler($(this));
-	});
-});
-
-
 /**
 	Handels all the stuff that happens, when a post is clicked:
 	- loading the post content or closing it
@@ -88,11 +73,10 @@ function clickOnPostHandler(referencedPost) {
 		} else if($('div.'+postContentClass).length !== 0) {
 			closeAndRemovePostContent(referencedPost, postContentClass, 600);
 		}
-	}
-	// NOTHING TO RETURN -> NO LINK RESOLUTION
-	return false;
-}
-
+	} // end if / else-if condition hasClass(closedPostClass)
+	
+	//return false; 
+} // end function click on post handler 
 
 /**
 	Hides and removes the content of a post or the loading message when loading the post-content 
@@ -259,4 +243,25 @@ function loadAllPosts(metaDataType) {
 		document.alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
 	}); // end of asynch done() - contentDataFromDB
 }
+
+
+
+
+
+$(document).ready(function(){
+
+	// read URL-data or anything else, default is metaDataType = start_date
+	loadAllPosts("start_date");
+	//loadAllPosts("post_date");
+
+	/***********************************************
+		HANDLER FOR OPENING / CLOSING THE POSTs
+	************************************************/
+	$('div.post').click(function() {
+		clickOnPostHandler($(this));
+	});
+});
+
+
+
 }());
