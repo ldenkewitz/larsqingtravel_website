@@ -1,3 +1,4 @@
+(function () {
 "use strict";
 
 var htmlLoadingMessage = '<p class="loadingMessage"><img src="images/ajax-loader.gif" alt="ajax-loader">loading the content...</p>';
@@ -129,9 +130,11 @@ function closeAndRemovePostContent(referencedPost, classToClose, hideDuration) {
 }
 */
 
-function getPostContentFromFilesAsync(referencedPost) {
+/*
+function getPostContentFromFilesAsync(linkName) {
 	return $.get(linkName);
 }
+*/
 
 /**
 	Just make a call to the DB (via PHP-script)
@@ -172,12 +175,12 @@ function loadAllPosts(metaDataType) {
 		if(metaDataType === 'start_date') {
 
 			var country = "";
-			var start_date, end_date, article_id, post_div_id, post_date, date_range, articleTemplate, mustacheHtml, selectionTemplate;
+			var start_date, end_date, article_id, post_date, date_range, articleTemplate, mustacheHtml, selectionTemplate;
 
 			$.each(data ,function( index, value ) {
 
 				// if new article - grounped by country
-				if( country != value.country ) {
+				if( country !== value.country ) {
 					start_date = moment(value.start_date_country);
 					end_date = moment(value.end_date_country);
 					country = value.country;
@@ -252,7 +255,8 @@ function loadAllPosts(metaDataType) {
 			clickOnPostHandler($(this));
 		});
 
-	}).fail(function(data) {
-		alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
+	}).fail(function() {
+		document.alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
 	}); // end of asynch done() - contentDataFromDB
 }
+}());
