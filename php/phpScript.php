@@ -2,10 +2,10 @@
 	/*Simple PHP-Script to connect to the MySQL-DB to load all the website content stored in there
 	and return the results either as JSON or as plain text(html-content).*/
 	
-	if( isset($_GET['postId']) ) {
-		getPostContentFromSpecificPost($_GET['postId']);
-	} elseif ( isset($_GET['metaData']) ) {
-		getAllPostsAndMetaData($_GET['metaData']);
+	if( isset($_POST['postId']) ) {
+		getPostContentFromSpecificPost($_POST['postId']);
+	} elseif ( isset($_POST['metaData']) ) {
+		getAllPostsAndMetaData($_POST['metaData']);
 	}
 
 	function getAllPostsAndMetaData($select_view) {

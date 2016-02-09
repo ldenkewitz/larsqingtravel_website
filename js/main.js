@@ -33,7 +33,6 @@ function clickOnPostHandler(referencedPost) {
 		} else if ( $('div.'+openedPostClass).length !== 0 ) {
 			closeAndRemovePostContent($('div.'+openedPostClass), postContentClass, 600);
 		}
-
 		// CHANGE CLASSES
 		referencedPost.toggleClass(closedPostClass).toggleClass(openedPostClass);
 		
@@ -127,7 +126,7 @@ function getPostContentFromFilesAsync(linkName) {
 	param - parameter for the DB-select
 */
 function getPostContentFromDBAsync(param) {
-	return $.get( 'php/phpScript.php', { postId: param });
+	return $.post( 'php/phpScript.php', { postId: param });
 }
 
 /**
@@ -137,7 +136,12 @@ function getPostContentFromDBAsync(param) {
 	metaDataType - string that describes, what metaData and what order are loaded and how the page is going to be build up
 */
 function getAllPostsAndMetaDataFromDBAsync(metaDataType) {
-	var json = $.getJSON( 'php/phpScript.php', { metaData: metaDataType } );
+	var json = $.ajax({
+		type: "POST",
+		url: 'php/phpScript.php', 
+		data: { metaData: metaDataType }, 
+		dataType: "json"
+	}); 
 	return json;
 }
 
@@ -240,7 +244,7 @@ function loadAllPosts(metaDataType) {
 		});
 
 	}).fail(function() {
-		document.alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
+		alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
 	}); // end of asynch done() - contentDataFromDB
 }
 
