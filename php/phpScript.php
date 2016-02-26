@@ -60,8 +60,9 @@
 			$result->free();
 			$conn->close();
 			echo $content;
+		} else {
+			echo "wrong input!";
 		}
-		echo "wrong input!";
 	}
 
 	function connectToDB() {
