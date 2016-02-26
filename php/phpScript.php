@@ -33,6 +33,7 @@
 
 		$result->free();
 		$conn->close();
+		header('Content-type: application/json');
 		echo json_encode($jsonResult);
 	}
 
@@ -55,12 +56,18 @@
 
 			$result->free();
 			$conn->close();
+			header('Content-type: application/json');
 			echo $content;
 	}
 
 	function connectToDB() {
-		$conn = new mysqli('localhost', 'travelSelectUser', 'travel', 'travel_db');
-		//$conn = new mysqli('ldenkewi-it.de', 'cu-de_test1234', 'Test1234!', 'cu-denkewitzlars01_test');
+		$fileName = "../../passwds/pw_travel.inc";
+		$pwfile = fopen($fileName, "r") or die("Unable to open file!");
+		$pw = fgets($pwfile);
+		fclose($pwfile);
+
+		$conn = new mysqli('localhost', 'travelSelectUser', $pw, 'travel_db');
+		//$conn = new mysqli('ldenkewi-it.de', 'cu-de_test1234', $pw, 'cu-denkewitzlars01_test');
 
 		if($conn->connection_error){
 			echo "connection error!";
@@ -68,5 +75,16 @@
 		}
 		return $conn;
 	}
+
+	/* creating a blowfish pw */
+	function better_crypt($input, $rounds = 10)
+  {
+   	$crypt_options = array(
+   	   'cost' => $rounds
+   	);
+   	return password_hash($input, PASSWORD_BCRYPT, $crypt_options);
+  }
+
+
 
 ?>
