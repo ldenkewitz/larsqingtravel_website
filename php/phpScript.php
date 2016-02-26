@@ -2,9 +2,9 @@
 	/*Simple PHP-Script to connect to the MySQL-DB to load all the website content stored in there
 	and return the results either as JSON or as plain text(html-content).*/
 	
-	if( isset($_POST['postId']) ) {
+	if( $_SERVER['REQUEST_METHOD'] == "POST" &&  isset($_POST['postId']) ) {
 		getPostContentFromSpecificPost($_POST['postId']);
-	} elseif ( isset($_POST['metaData']) ) {
+	} elseif ( $_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['metaData']) ) {
 		getAllPostsAndMetaData($_POST['metaData']);
 	}
 
@@ -40,6 +40,9 @@
 
 	function getPostContentFromSpecificPost($postId) {
 		$conn = connectToDB();
+		// SANITIZING THE PARAM -> ONLY INTEGER!
+		if (!filter_var($postId, FILTER_VALIDATE_INT) === false) {
+			//$postId = $conn->real_escape_string($postId);
 			$sql = "select content from view_english_post_content where id_post = '$postId'";
 
 			// in case the server-setting for the client is not set to utf8 charset....bad for chinese :-p
@@ -56,8 +59,9 @@
 
 			$result->free();
 			$conn->close();
-			header('Content-type: application/json');
 			echo $content;
+		}
+		echo "wrong input!";
 	}
 
 	function connectToDB() {
