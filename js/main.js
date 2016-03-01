@@ -56,7 +56,9 @@ function clickOnPostHandler(referencedPost) {
 					var mustacheHtml = Mustache.to_html(contentTemplate, mustacheParam);
 					$(referencedPost).after(mustacheHtml);
 					$("div.post_content").prepend(data);
-					$("div.post_content").show(1250);
+					$("div.post_content").show(1250, function() {
+						scrollToElement(referencedPost);
+					});
 				}); // end of hide() - loadingMessage
 			}); // end of asynch done() - contentFromDB
 		}); // end of show() - loadingMessage
@@ -250,6 +252,18 @@ function loadAllPosts(metaDataType) {
 	}).fail(function() {
 		alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
 	}); // end of asynch done() - contentDataFromDB
+}
+
+/**
+	Scrolls the window up/down to the given element
+	
+	@parameters:
+	elementSelector - selector of the element to scroll to (example: "#post_26")
+*/
+function scrollToElement(elementSelector) {
+	$('html, body').animate({
+      scrollTop: $(elementName).offset().top
+   }, 300);
 }
 
 
