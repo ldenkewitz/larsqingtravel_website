@@ -81,7 +81,7 @@ function clickOnPostHandler(referencedPost) {
 	Hides and removes the content of a post or the loading message when loading the post-content 
 
 	@parameters: 
-	referencedPost - the object of the openend "div.post a" element
+	referencedPost - the object of the openend "post div" element
 	classToClose - class of element that has to be hidden and removed
 	hideDuration - milliseconds of the hiding effect
 */
@@ -184,7 +184,7 @@ function loadAllPosts(metaDataType) {
 					// add the attribute to the object that is used by the template
 					value.date_range = date_range;
 
-					// using the mustache template to build the html for the article					
+					// mustache template for the article	
 					articleTemplate = $('#postArticleTpl').html();
 					mustacheHtml = Mustache.to_html(articleTemplate, value);
     				$("div#main").append(mustacheHtml);
@@ -193,15 +193,16 @@ function loadAllPosts(metaDataType) {
     				$("div#main article").last().attr('id', article_id);
 				} //end if for new country
 
-				// using the mustache template to build the html for the article
+				// using moment.js to set localized date
 				post_date = moment(value.post_date);
 				value.post_date = post_date.format("LL");
 
+				// mustache template for the post-section
 				selectionTemplate = $('#postSectionTpl').html();
 				mustacheHtml = Mustache.to_html(selectionTemplate, value);
 				$('#'+article_id).append(mustacheHtml);
 
-				// adding id and some html5 data attributes for later on
+				// adding id and some html5 data attributes for later usage
 				$('#'+article_id+' section div.post').last()
 					.attr("id", 'post_'+value.id_post)
 					.attr("data-post-id", value.id_post)
@@ -220,10 +221,11 @@ function loadAllPosts(metaDataType) {
 
 			$.each(data ,function( index, value ) {
 				
-				// using the mustache template to build the html for the article
+				// using moment.js to set localized date
 				post_date = moment(value.post_date);
 				value.post_date = post_date.format("LL");
 
+				// using the mustache template to build the html for the article
 				selectionTemplate = $('#postSectionByPostDateTpl').html();
 				mustacheHtml = Mustache.to_html(selectionTemplate, value);
 				$("div#main article").append(mustacheHtml);
@@ -238,7 +240,9 @@ function loadAllPosts(metaDataType) {
 			}); // end of each() loop
 		} // end else if for metaDataTyp === 'post_date'
 	
-		//after the elements are added, bind the handler again
+		/***********************************************
+		HANDLER FOR OPENING / CLOSING THE POSTs
+		************************************************/
 		$('div.post').click(function() {
 			clickOnPostHandler($(this));
 		});
@@ -249,21 +253,12 @@ function loadAllPosts(metaDataType) {
 }
 
 
-
-
-
 $(document).ready(function(){
 
 	// read URL-data or anything else, default is metaDataType = start_date
 	loadAllPosts("start_date");
 	//loadAllPosts("post_date");
 
-	/***********************************************
-		HANDLER FOR OPENING / CLOSING THE POSTs
-	************************************************/
-	$('div.post').click(function() {
-		clickOnPostHandler($(this));
-	});
 });
 
 
