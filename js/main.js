@@ -6,6 +6,7 @@ var loadingMessageClass = 'loadingMessage';
 var postContentClass = 'post_content';
 var closedPostClass = 'closed';
 var openedPostClass = 'opened';
+var smallScreen = false;
 
 /**
 	Handels all the stuff that happens, when a post is clicked:
@@ -98,30 +99,6 @@ function closeAndRemovePostContent(referencedPost, classToClose, hideDuration) {
 }
 
 /**
-	Actualizes the URL with the address of the last visited post 
-
-	@parameters:
-	innerLink - Optional: at the original link address can this inner link address be concated
-*/
-
-/*function cleanReturnUrl(innerLink) {
-	// SET BROWSER URL TO THE ACTUAL POST-ADDRESS
-	var returnLink = window.location.href;
-	var position;
-	position = returnLink.search('#');
-	if (position > -1) {returnLink = returnLink.substring(0, position);}
-	if (innerLink) {returnLink += innerLink;}
-	window.location.href = returnLink;
-}
-*/
-
-/*
-function getPostContentFromFilesAsync(linkName) {
-	return $.get(linkName);
-}
-*/
-
-/**
 	Just make a call to the DB (via PHP-script)
 
 	@parameters:
@@ -185,6 +162,10 @@ function loadAllPosts(metaDataType) {
 
 					// add the attribute to the object that is used by the template
 					value.date_range = date_range;
+
+					// add flag size for responsible design regarding to screen size at page load
+					value.flagsize = "32";
+					if(smallScreen) {value.flagsize = "24";}
 
 					// mustache template for the article	
 					articleTemplate = $('#postArticleTpl').html();
@@ -262,17 +243,50 @@ function loadAllPosts(metaDataType) {
 */
 function scrollToElement(elementSelector) {
 	$('html, body').animate({
-      scrollTop: $(elementName).offset().top
+      scrollTop: $(elementSelector).offset().top
    }, 300);
 }
 
+/**
+	After the initial document load, set a boolean whether the screen size is >=625px or higher .
+*/
+function setInitialScreenSize() {
+	smallScreen = window.matchMedia('(max-width: 625px)').matches;
+}
+
+/**
+	Hander for window-resize.
+	If the size of 625px is reached, it sets the correct image-path for the new size.
+	The replace is only called, when there is a actual change and not at the initial page load.
+*/
+function resizeHandler() {
+	var isActualScreenSmall = window.matchMedia('(max-width: 625px)').matches;
+	// XOR bitoperation: 1, if the values differ
+	if( (isActualScreenSmall ^ smallScreen) === 1 ) { 
+		smallScreen = isActualScreenSmall ;
+
+		// The correct initial flag size is set in loadAllPosts() with the templating
+		if(smallScreen) {
+			$("article em img").each(function() {
+				$(this).attr("src", $(this).attr("src").replace(/\d+/g, "24") );
+			});
+		} else {
+			$("article em img").each(function() {
+				$(this).attr("src", $(this).attr("src").replace(/\d+/g, "32") );
+			});
+		}
+	};
+}
 
 $(document).ready(function(){
 
+	setInitialScreenSize();
 	// read URL-data or anything else, default is metaDataType = start_date
 	loadAllPosts("start_date");
 	//loadAllPosts("post_date");
 
+	// set screenSize and handler for exchanging content by resizing to and from small screens.
+	$( window ).resize(resizeHandler);
 });
 
 

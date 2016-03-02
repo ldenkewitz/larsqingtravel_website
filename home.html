@@ -15,13 +15,13 @@
 	<link rel="stylesheet" href="css/normalize.min.css" type="text/css">
   <link rel="stylesheet" href="css/main.css" type="text/css">
 
-  <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script> -->
 </head>
 <body>
    
 	<div id="container">
 		<header>
-			<h2>traveling with <br/><span>Qing</span> and <span>Lars</span></h2>
+			<h2>traveling with <span>Qing</span> and <span>Lars</span></h2>
 		</header>
 		
 		<div id="main">
@@ -35,7 +35,7 @@
 
       <script id="postArticleTpl" type="text/template"> 
         <article>
-          <h3>{{date_range}} <em>({{country}})<img alt="" src="../images/flags/32/{{country}}.png"></em></h3>
+          <h3>{{date_range}} <em>({{country}})<img alt="" src="../images/flags/{{flagsize}}/{{country}}.png"></em></h3>
         </article> 
       </script>
 
@@ -91,7 +91,8 @@
 			<div>
 				| - www.larsqingtravel.ldenkewi-it.de - |
 				<a href="http://www.larsqingtravel.ldenkewi-it.de/xml/rssfeed_larsqingtravel.xml">
-					<img src="http://www.w3schools.com/xml/pic_rss.gif" width="36" height="14" alt="[RSS feed]"></a>
+          <span/>
+        </a>
 			</div>
 		</footer>
 	</div><!-- end: dvi.container -->
