@@ -1,9 +1,6 @@
 (function () {
 "use strict";
 
-var htmlLoadingMessage = '<p class="loadingMessage"><img src="images/ajax-loader.gif" alt="ajax-loader">loading the content...</p>';
-var loadingMessageClass = 'loadingMessage';
-var postContentClass = 'post_content';
 var closedPostClass = 'closed';
 var openedPostClass = 'opened';
 var smallScreen = false;
@@ -20,9 +17,12 @@ var smallScreen = false;
 	referencedPost - the "clicked" post
 */
 function clickOnPostHandler(referencedPost) {
-
+	var postContentClass = 'post_content';
+	var loadingMessageClass = 'loadingMessage';
+	
 	// WHEN THIS POST IS STILL CLOSED
 	if ( referencedPost.hasClass(closedPostClass) ) {
+		var htmlLoadingMessage = '<p class="loadingMessage"><img src="images/ajax-loader.gif" alt="ajax-loader">loading the content...</p>';
 
 		// IF THERE IS SOMEWHERE OPEN CONTENT
 
@@ -80,6 +80,7 @@ function clickOnPostHandler(referencedPost) {
 	//return false; 
 } // end function click on post handler 
 
+
 /**
 	Hides and removes the content of a post or the loading message when loading the post-content 
 
@@ -126,113 +127,140 @@ function getAllPostsAndMetaDataFromDBAsync(metaDataType) {
 
 /**
 	Load all posts with their meta data from the DB.
-	After this, build up the page via mustacheJS with data coming via JSON from the DB/PHP.
-	Regarding to @metaDataType the page-construction-process differs...
-	The right order is already given by the DB via the specific View.
-
+	Depending on the given parameter @metaDataType, run the specific building function.
+	
 	@parameters:
 	metaDataType - string that describes, what metaData and what order are loaded and how the page is going to be build up
 */
 function loadAllPosts(metaDataType) {
-	getAllPostsAndMetaDataFromDBAsync(metaDataType).done(function(data) {
-
-		
-
-		// ORDER BY START DATE, GROUP BY COUNTRY
-		if(metaDataType === 'start_date') {
-
-			var country = "";
-			var start_date, end_date, article_id, post_date, date_range, articleTemplate, mustacheHtml, selectionTemplate;
-
-			$.each(data ,function( index, value ) {
-
-				// if new article - grounped by country
-				if( country !== value.country ) {
-					start_date = moment(value.start_date_country);
-					end_date = moment(value.end_date_country);
-					country = value.country;
-					article_id = value.country.replace(" ", "_")+"_"+start_date.format("MM-YYYY");
-
-					// if the trip was in beneath the same month of the same year
-					if(start_date.year() === end_date.year() && start_date.month() === end_date.month()) {
-						date_range = start_date.format("MMM YYYY");
-					}else{
-						date_range = start_date.format("MMM YYYY")+" - "+end_date.format("MMM YYYY");
-					}
-
-					// add the attribute to the object that is used by the template
-					value.date_range = date_range;
-
-					// add flag size for responsible design regarding to screen size at page load
-					value.flagsize = "32";
-					if(smallScreen) {value.flagsize = "24";}
-
-					// mustache template for the article	
-					articleTemplate = $('#postArticleTpl').html();
-					mustacheHtml = Mustache.to_html(articleTemplate, value);
-    				$("div#main").append(mustacheHtml);
-
-    				// additional id to add...
-    				$("div#main article").last().attr('id', article_id);
-				} //end if for new country
-
-				// using moment.js to set localized date
-				post_date = moment(value.post_date);
-				value.post_date = post_date.format("LL");
-
-				// mustache template for the post-section
-				selectionTemplate = $('#postSectionTpl').html();
-				mustacheHtml = Mustache.to_html(selectionTemplate, value);
-				$('#'+article_id).append(mustacheHtml);
-
-				// adding id and some html5 data attributes for later usage
-				$('#'+article_id+' section div.post').last()
-					.attr("id", 'post_'+value.id_post)
-					.attr("data-post-id", value.id_post)
-					// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
-					.attr("data-flickr-address", value.flickr_address)
-					.attr("data-country", value.country);
-			}); // end of each() loop
-			
-		// ORDER BY POST DATE, SECOND ORDER BY COUNTRY
-		} else if(metaDataType === 'post_date') {
-
-			// using the mustache template to build the html for the article					
-			articleTemplate = $('#postArticleByPostDateTpl').html();
-			mustacheHtml = Mustache.to_html(articleTemplate, data);
-			$("div#main").append(mustacheHtml);
-
-			$.each(data ,function( index, value ) {
-				
-				// using moment.js to set localized date
-				post_date = moment(value.post_date);
-				value.post_date = post_date.format("LL");
-
-				// using the mustache template to build the html for the article
-				selectionTemplate = $('#postSectionByPostDateTpl').html();
-				mustacheHtml = Mustache.to_html(selectionTemplate, value);
-				$("div#main article").append(mustacheHtml);
-
-				// adding id and some html5 data attributes for later on
-				$('div.post').last()
-					.attr("id", 'post_'+value.id_post)
-					.attr("data-post-id", value.id_post)
-					// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
-					.attr("data-flickr-address", value.flickr_address)
-					.attr("data-country", value.country);
-			}); // end of each() loop
-		} // end else if for metaDataTyp === 'post_date'
-	
-		/***********************************************
-		HANDLER FOR OPENING / CLOSING THE POSTs
-		************************************************/
-		$('div.post').click(function() {
-			clickOnPostHandler($(this));
+	// ORDER BY START DATE, GROUP BY COUNTRY
+	if(metaDataType === 'start_date') {
+		getAllPostsAndMetaDataFromDBAsync(metaDataType)
+			.done(buildPostContentByStartDate)
+			.fail(function() {
+				alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
 		});
+	// ORDER BY POST DATE, NO GROUPING
+	} else if(metaDataType === 'post_date') {
+		var _this = getAllPostsAndMetaDataFromDBAsync(metaDataType)
+			.done(buildPostContentByPostDate)
+			.fail(function() {
+				alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
+		});
+	}
 
-	}).fail(function() {
-		alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
-	}); // end of asynch done() - contentDataFromDB
+	
+}
+
+
+/**
+	Order by start date build function. (start date = the real date, we were in the specific country)
+	Build up the page via mustacheJS with data coming via JSON data from the DB/PHP.
+	The correct order of the posts is already defined by the DB.
+
+	@parameters:
+	data - JSON data from the DB (PHP)
+*/
+function buildPostContentByStartDate(data) {
+	var country = "";
+	var start_date, end_date, article_id, post_date, date_range, articleTemplate, mustacheHtml, selectionTemplate;
+
+	$.each(data ,function( index, value ) {
+
+		// if new article - grounped by country
+		if( country !== value.country ) {
+			start_date = moment(value.start_date_country);
+			end_date = moment(value.end_date_country);
+			country = value.country;
+			article_id = value.country.replace(" ", "_")+"_"+start_date.format("MM-YYYY");
+
+			// if the trip was in beneath the same month of the same year
+			if(start_date.year() === end_date.year() && start_date.month() === end_date.month()) {
+				date_range = start_date.format("MMM YYYY");
+			}else{
+				date_range = start_date.format("MMM YYYY")+" - "+end_date.format("MMM YYYY");
+			}
+
+			// add the attribute to the object that is used by the template
+			value.date_range = date_range;
+
+			// add flag size for responsible design regarding to screen size at page load
+			value.flagsize = "32";
+			if(smallScreen) {value.flagsize = "24";}
+
+			// mustache template for the article	
+			articleTemplate = $('#postArticleTpl').html();
+			mustacheHtml = Mustache.to_html(articleTemplate, value);
+				$("div#main").append(mustacheHtml);
+
+				// additional id to add...
+				$("div#main article").last().attr('id', article_id);
+		} //end if for new country
+
+		// using moment.js to set localized date
+		post_date = moment(value.post_date);
+		value.post_date = post_date.format("LL");
+
+		// mustache template for the post-section
+		selectionTemplate = $('#postSectionTpl').html();
+		mustacheHtml = Mustache.to_html(selectionTemplate, value);
+		$('#'+article_id).append(mustacheHtml);
+
+		// adding id and some html5 data attributes for later usage
+		$('#'+article_id+' section div.post').last()
+			.attr("id", 'post_'+value.id_post)
+			.attr("data-post-id", value.id_post)
+			// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
+			.attr("data-flickr-address", value.flickr_address)
+			.attr("data-country", value.country);
+	}); // end of each() loop
+
+	// after the DOM is completed, add the event handler
+	$('div.post').click(function() {
+		clickOnPostHandler($(this));
+	});
+}
+
+/**
+	Order by post date build function.
+	Build up the page via mustacheJS with data coming via JSON data from the DB/PHP.
+	The correct order of the posts is already defined by the DB.
+
+	@parameters:
+	data - JSON data from the DB (PHP)
+*/
+function buildPostContentByPostDate(data) {
+	var country = "";
+	var post_date, articleTemplate, mustacheHtml, selectionTemplate;
+	// using the mustache template to build the html for the article					
+	articleTemplate = $('#postArticleByPostDateTpl').html();
+	mustacheHtml = Mustache.to_html(articleTemplate, data);
+	$("div#main").append(mustacheHtml);
+
+	$.each(data ,function( index, value ) {
+		
+		// using moment.js to set localized date
+		post_date = moment(value.post_date);
+		value.post_date = post_date.format("LL");
+
+		// using the mustache template to build the html for the article
+		selectionTemplate = $('#postSectionByPostDateTpl').html();
+		mustacheHtml = Mustache.to_html(selectionTemplate, value);
+		$("div#main article").append(mustacheHtml);
+
+		// adding id and some html5 data attributes for later on
+		$('div.post').last()
+			.attr("id", 'post_'+value.id_post)
+			.attr("data-post-id", value.id_post)
+			// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
+			.attr("data-flickr-address", value.flickr_address)
+			.attr("data-country", value.country);
+	}); // end of each() loop
+
+	// after the DOM is completed, add the event handler
+	$('div.post').click(function() {
+		clickOnPostHandler($(this));
+	});
 }
 
 /**

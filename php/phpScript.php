@@ -90,8 +90,8 @@
          $pw = fgets($pwfile);
          fclose($pwfile);
 
-         // $conn = new mysqli('localhost', 'travelSelectUser', $pw, 'travel_db');
-         $conn = new mysqli('ldenkewi-it.de:3306', 'cu-de_read_only', $pw, 'cu-denkewitzlars01_travel_db');
+         $conn = new mysqli('localhost', 'travelSelectUser', $pw, 'travel_db');
+         // $conn = new mysqli('ldenkewi-it.de:3306', 'cu-de_read_only', $pw, 'cu-denkewitzlars01_travel_db');
          if($conn->connection_error){
             echo "connection error\n";
             return null;
