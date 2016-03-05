@@ -142,7 +142,7 @@ function loadAllPosts(metaDataType) {
 		});
 	// ORDER BY POST DATE, NO GROUPING
 	} else if(metaDataType === 'post_date') {
-		var _this = getAllPostsAndMetaDataFromDBAsync(metaDataType)
+		getAllPostsAndMetaDataFromDBAsync(metaDataType)
 			.done(buildPostContentByPostDate)
 			.fail(function() {
 				alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
@@ -230,7 +230,6 @@ function buildPostContentByStartDate(data) {
 	data - JSON data from the DB (PHP)
 */
 function buildPostContentByPostDate(data) {
-	var country = "";
 	var post_date, articleTemplate, mustacheHtml, selectionTemplate;
 	// using the mustache template to build the html for the article					
 	articleTemplate = $('#postArticleByPostDateTpl').html();
@@ -303,7 +302,7 @@ function resizeHandler() {
 				$(this).attr("src", $(this).attr("src").replace(/\d+/g, "32") );
 			});
 		}
-	};
+	}
 }
 
 /**
@@ -313,7 +312,7 @@ function resizeHandler() {
 function generateMailTo() {
 	var encodedString = "%28%66%75%6e%63%74%69%6f%6e%28%29%20%7b%76%61%72%20%72%6d%6e%79%6b%31%34%3d%5b%27%25%36%63%25%36%31%25%37%32%25%37%33%25%37%31%25%36%39%25%36%65%25%36%37%25%37%34%25%37%32%25%36%31%25%37%36%25%36%35%25%36%63%27%2c%5b%27%25%36%34%25%36%35%27%2c%27%25%36%63%25%36%34%25%36%35%25%36%65%25%36%62%25%36%35%25%37%37%25%36%39%25%32%64%25%36%39%25%37%34%27%5d%2e%72%65%76%65%72%73%65%28%29%2e%6a%6f%69%6e%28%27%2e%27%29%5d%2e%6a%6f%69%6e%28%27%40%27%29%3b%76%61%72%20%65%74%76%75%6b%38%38%3d%75%6e%65%73%63%61%70%65%28%72%6d%6e%79%6b%31%34%29%3b%72%65%74%75%72%6e%20%27%6d%61%69%27%2b%27%6c%74%6f%3a%27%2b%72%6d%6e%79%6b%31%34%3b%7d%28%29%29";
 
-	$("#main ~ footer a.email_icon").attr("href", eval(unescape(encodedString)));
+	$("#main ~ footer a.email_icon").attr("href", eval(decodeURIComponent(encodedString)));
 }
 
 /**
@@ -321,7 +320,7 @@ function generateMailTo() {
 */
 function encodeToHex(str) {
 	var arr1 = [];  
-	if(str != null) {
+	if(str !== null) {
 		for (var i = 0; i < str.length; i++) {
 			var hex = "%"+Number(str.charCodeAt(i)).toString(16);  
 			arr1.push(hex);  
@@ -334,8 +333,8 @@ $(document).ready(function(){
 	setInitialScreenSize();
 	generateMailTo();
 
-	loadAllPosts("start_date");
-	//loadAllPosts("post_date");
+	// loadAllPosts("start_date");
+	loadAllPosts("post_date");
 
 	// set screenSize and handler for exchanging content by resizing to and from small screens.
 	$( window ).resize(resizeHandler);
