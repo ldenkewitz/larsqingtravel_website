@@ -122,7 +122,8 @@ div.post_content img{width: 90%; margin: auto; margin-top: inherit; display: blo
 #main ~ footer{text-align: center; margin-bottom: 40px; color: #666666 }
 #main ~ footer > div{border-top:1px solid silver; max-width:650px; margin: auto; padding-top: 5px }
 #main ~ footer img{vertical-align: baseline }
-#main ~ footer span{background-image: url(../images/feed_icon/feed-icon_orange-24px.png); width: 24px; height: 24px; display: inline-block; vertical-align: bottom;}
+#main ~ footer span.rss_icon{background-image: url(../images/feed_icon/feed-icon_orange-24px.png); width: 24px; height: 24px; display: inline-block; vertical-align: bottom;}
+#main ~ footer span.email_icon{background-image: url(../images/email_icon/email_icon_24x24.gif); width: 24px; height: 24px; display: inline-block; vertical-align: bottom;}
 
 
 
@@ -206,7 +207,8 @@ div.post_content img{width: 90%; margin: auto; margin-top: inherit; display: blo
  
    #main ~ footer{ font-size: 0.75em }
    #main ~ footer div{ max-width:400px; }
-   #main ~ footer span{background-image: url(../images/feed_icon/feed-icon_orange-16px.png); width: 16px; height: 16px;}
+   #main ~ footer span.rss_icon{background-image: url(../images/feed_icon/feed-icon_orange-16px.png); width: 16px; height: 16px;}
+   #main ~ footer span.email_icon{background-image: url(../images/email_icon/email_icon_16x16.gif); width: 16px; height: 16px;}
 }
 
 @media screen and (max-width: 585px) {
