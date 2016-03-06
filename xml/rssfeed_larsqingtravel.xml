@@ -4,8 +4,17 @@
 	<title>Traveling Qing + Lars</title>
 	<link>http://larsqingtravel.ldenkewi-it.de/home.html/</link>
 	<language>en-us</language>
-	<description>Our latest posts</description>
+	<description>Our latest posts and news</description>
 	<atom:link href="http://larsqingtravel.ldenkewi-it.de/xml/rssfeed_larsqingtravel.xml" rel="self" type="application/rss+xml" />
+
+	<item>
+		<title>The page got a new design - now it also fits for your smartphone. Try it! ;-)</title>
+		<link>http://larsqingtravel.ldenkewi-it.de/home.html</link>
+		<pubDate>Sat, 05 Mar 2016 18:00:00 EST</pubDate>
+		<description>
+			The new, responsible page design comes along with a couple of internal and technical changes like usage of a database or templating via mustachJS....but that are details! Most important for you: it now scales regarding to the screen size of your device.
+		</description>
+	</item>
 
 	<item>
 		<title>Jakarta. Indonesia. 2014</title>
