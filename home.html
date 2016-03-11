@@ -42,13 +42,13 @@
 
       <!-- Templates for: ORDER BY START DATE, GROUP BY COUNTRY -->
 
-      <script id="postArticleTpl" type="text/template"> 
+      <script id="postArticleStartDateTpl" type="text/template"> 
         <article>
           <h3>{{date_range}} <em>({{country}})<img alt="" src="../images/flags/{{flagsize}}/{{country}}.png"></em></h3>
         </article> 
       </script>
 
-      <script id="postSectionTpl" type="text/template">
+      <script id="postSectionStartDateTpl" type="text/template">
         <section>
           <div class="post closed">
             <span class="open_indicator closed">+</span>
@@ -59,6 +59,31 @@
           </div>
         </section>
       </script>
+
+
+      <!-- Templates for: ORDER BY POST DATE, SECOND ORDER BY COUNTRY -->
+      
+      <script id="postArticlePostDateTpl" type="text/template">
+        <article>
+          <h3>{{article_header}}</h3>
+        </article>
+      </script>
+
+
+      <script id="postSectionPostDateTpl" type="text/template">
+        <section>
+          <div class="post closed">
+            <span class="open_indicator closed">+</span>
+            <span class="post_caption">{{caption}}</span>
+            <aside>
+              <p>{{country}} | {{author}} | <strong> {{post_date}} </strong></p>
+            </aside>
+          </div>
+        </section>
+      </script>
+
+
+      <!-- Template for post content -->
 
       <script id="postContentTpl" type="text/template">
         <div class="post_content">
@@ -72,27 +97,6 @@
         </div>
       </script>
 
-
-      <!-- templates for: ORDER BY POST DATE, SECOND ORDER BY COUNTRY -->
-      
-      <script id="postArticleByPostDateTpl" type="text/template">
-        <article>
-          <h3>sorted by date of post...</h3>
-        </article>
-      </script>
-
-
-      <script id="postSectionByPostDateTpl" type="text/template">
-        <section>
-          <div class="post closed">
-            <span class="open_indicator closed">+</span>
-            <span class="post_caption">{{caption}}</span>
-            <aside>
-              <p>{{country}} | {{author}} | <strong> {{post_date}} </strong></p>
-            </aside>
-          </div>
-        </section>
-      </script>
 
 		</div><!-- end: div.main -->
 

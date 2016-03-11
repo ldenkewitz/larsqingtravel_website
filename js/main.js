@@ -13,6 +13,8 @@ var smallScreen = false;
 	- unfold the content by calling .show() or .hide() to close it
 	- after closing, the post will be removed, not only visibility = hidden
 
+	Approach was, not using jQueryUI ...
+
 	@parameters:
 	referencedPost - the "clicked" post
 */
@@ -80,6 +82,10 @@ function clickOnPostHandler(referencedPost) {
 	//return false; 
 } // end function click on post handler 
 
+
+function clicckOnOrderButtonHandler() {
+
+}
 
 /**
 	Hides and removes the content of a post or the loading message when loading the post-content 
@@ -167,7 +173,7 @@ function buildPostContentByStartDate(data) {
 
 	$.each(data ,function( index, value ) {
 
-		// if new article - grounped by country
+		// if new article - grouped by country
 		if( country !== value.country ) {
 			start_date = moment(value.start_date_country);
 			end_date = moment(value.end_date_country);
@@ -189,7 +195,7 @@ function buildPostContentByStartDate(data) {
 			if(smallScreen) {value.flagsize = "24";}
 
 			// mustache template for the article	
-			articleTemplate = $('#postArticleTpl').html();
+			articleTemplate = $('#postArticleStartDateTpl').html();
 			mustacheHtml = Mustache.to_html(articleTemplate, value);
 				$("div#main").append(mustacheHtml);
 
@@ -202,17 +208,11 @@ function buildPostContentByStartDate(data) {
 		value.post_date = post_date.format("LL");
 
 		// mustache template for the post-section
-		selectionTemplate = $('#postSectionTpl').html();
+		selectionTemplate = $('#postSectionStartDateTpl').html();
 		mustacheHtml = Mustache.to_html(selectionTemplate, value);
 		$('#'+article_id).append(mustacheHtml);
 
-		// adding id and some html5 data attributes for later usage
-		$('#'+article_id+' section div.post').last()
-			.attr("id", 'post_'+value.id_post)
-			.attr("data-post-id", value.id_post)
-			// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
-			.attr("data-flickr-address", value.flickr_address)
-			.attr("data-country", value.country);
+		addPostAttributes(value);
 	}); // end of each() loop
 
 	// after the DOM is completed, add the event handler
@@ -230,36 +230,92 @@ function buildPostContentByStartDate(data) {
 	data - JSON data from the DB (PHP)
 */
 function buildPostContentByPostDate(data) {
-	var post_date, articleTemplate, mustacheHtml, selectionTemplate;
-	// using the mustache template to build the html for the article					
-	articleTemplate = $('#postArticleByPostDateTpl').html();
-	mustacheHtml = Mustache.to_html(articleTemplate, data);
-	$("div#main").append(mustacheHtml);
+	var post_date, articleTemplate, mustacheHtml, selectionTemplate, prevMonthAgo;
 
 	$.each(data ,function( index, value ) {
-		
 		// using moment.js to set localized date
 		post_date = moment(value.post_date);
 		value.post_date = post_date.format("LL");
 
-		// using the mustache template to build the html for the article
-		selectionTemplate = $('#postSectionByPostDateTpl').html();
-		mustacheHtml = Mustache.to_html(selectionTemplate, value);
-		$("div#main article").append(mustacheHtml);
+		var timeRangeObject = generatePostDateTimeRangeAndLable(post_date);
 
-		// adding id and some html5 data attributes for later on
-		$('div.post').last()
-			.attr("id", 'post_'+value.id_post)
-			.attr("data-post-id", value.id_post)
-			// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
-			.attr("data-flickr-address", value.flickr_address)
-			.attr("data-country", value.country);
+		// if new article - grouped by country
+		if( !prevMonthAgo || timeRangeObject.monthAgo !== prevMonthAgo ) {
+			prevMonthAgo = timeRangeObject.monthAgo;
+
+			value.article_header = timeRangeObject.lable;
+
+			// using the mustache template to build the html for the article					
+			articleTemplate = $('#postArticlePostDateTpl').html();
+			mustacheHtml = Mustache.to_html(articleTemplate, value);
+			$("div#main").append(mustacheHtml);
+
+			// additional id to add...
+			$("div#main article").last().attr('id', prevMonthAgo+"month");
+
+		}
+
+		// using the mustache template to build the html for the article
+		selectionTemplate = $('#postSectionPostDateTpl').html();
+		mustacheHtml = Mustache.to_html(selectionTemplate, value);
+		$("#"+prevMonthAgo+"month").append(mustacheHtml);
+
+		addPostAttributes(value);
 	}); // end of each() loop
 
 	// after the DOM is completed, add the event handler
-	$('div.post').click(function() {
+	$("#"+prevMonthAgo+"month div.post").click(function() {
 		clickOnPostHandler($(this));
 	});
+}
+
+/**
+	Calculates the range of time from the given date till now, using moment-range library.
+	Also groups this date and generates a fitting lable.
+
+	@parameters:
+	post_date - a momentJS date 
+*/
+function generatePostDateTimeRangeAndLable(post_date) {
+	var result = {};
+	var thisMonth = 0, one_threeMonth = 1, three_sixMonth = 3, six_twelveMonth = 6, oneYearOrMore = 12;
+
+	// difference from date to now in milliseconds
+	var diffInMillis = Date.now() - Date.parse(post_date);
+
+	// duration in month, flooring (rounding down)
+	var monthAgo = moment.duration(diffInMillis).months();
+
+	if(monthAgo === thisMonth) {
+		result.monthAgo = 0;
+		result.lable = "Posted in the last month";
+	} else if(monthAgo >= oneYearOrMore) {
+		result.monthAgo = 12;
+		result.lable = "More than a year ago";
+	} else if(monthAgo >= six_twelveMonth) {
+		result.monthAgo = 6;
+		result.lable = "More than six month ago";
+	} else if(monthAgo >= three_sixMonth) {
+		result.monthAgo = 3;
+		result.lable = "More than 3 month ago";
+	} else if(monthAgo >= one_threeMonth) {
+		result.monthAgo = 1;
+		result.lable = "More than one month ago";
+	}
+	return result;
+
+}
+
+/**
+ 	Adding id and some html5 data attributes for later on
+ */
+function addPostAttributes(value) {
+	$('div.post').last()
+		.attr("id", 'post_'+value.id_post)
+		.attr("data-post-id", value.id_post)
+		// note: flickr-address may be NULL, but jQuery will handle this by just skipping this attr
+		.attr("data-flickr-address", value.flickr_address)
+		.attr("data-country", value.country);
 }
 
 /**
@@ -329,12 +385,16 @@ function encodeToHex(str) {
 	return arr1.join('');  
 }
 
+function readOrderByFlag() {
+
+}
+
 $(document).ready(function(){
 	setInitialScreenSize();
 	generateMailTo();
 
-	loadAllPosts("start_date");
-	// loadAllPosts("post_date");
+	// loadAllPosts("start_date");
+	loadAllPosts("post_date");
 
 	// set screenSize and handler for exchanging content by resizing to and from small screens.
 	$( window ).resize(resizeHandler);
