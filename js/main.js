@@ -83,8 +83,17 @@ function clickOnPostHandler(referencedPost) {
 } // end function click on post handler 
 
 
-function clicckOnOrderButtonHandler() {
+function clickOnOrderButtonHandler(event) {
+	var clickedButton = event.currentTarget.id;
+	var activeOrder = $("body").attr("data-active-order");
 
+	if( activeOrder !== undefined && clickedButton.indexOf(activeOrder) !== -1 ) {
+		// do nothing, because the order of the clicked button is already active
+	} else {
+		$("body").attr("data-active-order", clickedButton.substring(4));
+		
+		loadAllPosts();
+	}
 }
 
 /**
@@ -138,17 +147,28 @@ function getAllPostsAndMetaDataFromDBAsync(metaDataType) {
 	@parameters:
 	metaDataType - string that describes, what metaData and what order are loaded and how the page is going to be build up
 */
-function loadAllPosts(metaDataType) {
+function loadAllPosts() {
+	var order = $("body").attr("data-active-order");
+	if( order === undefined ) {
+		// default
+		order = "post_date";
+		$("body").attr("data-active-order", order);
+	} else {
+		// clean up articles because the view is going to be refreshed
+		$("#main article").fadeOut();
+		$("#main article").attr("class", "to_delete");
+	}
+
 	// ORDER BY START DATE, GROUP BY COUNTRY
-	if(metaDataType === 'start_date') {
-		getAllPostsAndMetaDataFromDBAsync(metaDataType)
+	if(order === 'start_date') {
+		getAllPostsAndMetaDataFromDBAsync(order)
 			.done(buildPostContentByStartDate)
 			.fail(function() {
 				alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
 		});
 	// ORDER BY POST DATE, NO GROUPING
-	} else if(metaDataType === 'post_date') {
-		getAllPostsAndMetaDataFromDBAsync(metaDataType)
+	} else if(order === 'post_date') {
+		getAllPostsAndMetaDataFromDBAsync(order)
 			.done(buildPostContentByPostDate)
 			.fail(function() {
 				alert("sorry :-( ...there is some problem with the DB. Please inform the admin.");
@@ -215,6 +235,9 @@ function buildPostContentByStartDate(data) {
 		addPostAttributes(value);
 	}); // end of each() loop
 
+	// detach (less expensive remove) the hidden articles
+	$(".to_delete").detach();
+
 	// after the DOM is completed, add the event handler
 	$('div.post').click(function() {
 		clickOnPostHandler($(this));
@@ -262,6 +285,9 @@ function buildPostContentByPostDate(data) {
 
 		addPostAttributes(value);
 	}); // end of each() loop
+
+	// detach (less expensive remove) the hidden articles
+	$(".to_delete").detach();
 
 	// after the DOM is completed, add the event handler
 	$("#"+prevMonthAgo+"month div.post").click(function() {
@@ -385,16 +411,13 @@ function encodeToHex(str) {
 	return arr1.join('');  
 }
 
-function readOrderByFlag() {
-
-}
-
 $(document).ready(function(){
 	setInitialScreenSize();
 	generateMailTo();
 
-	// loadAllPosts("start_date");
-	loadAllPosts("post_date");
+	$("nav button").click(clickOnOrderButtonHandler);
+
+	loadAllPosts();
 
 	// set screenSize and handler for exchanging content by resizing to and from small screens.
 	$( window ).resize(resizeHandler);
