@@ -1,8 +1,43 @@
 {
+	"SublimeLinter":
+	{
+		"linters":
+		{
+			"jsl":
+			{
+				"@disable": false,
+				"args":
+				[
+					"-conf",
+					"${project}/jsl.conf"
+				],
+				"chdir": "${project}",
+				"excludes":
+				[
+				]
+			},
+			"jslint":
+			{
+				"@disable": false,
+				"args":
+				[
+					"-conf",
+					"${project}/jsl.conf"
+				],
+				"chdir": "${project}",
+				"excludes":
+				[
+				]
+			}
+		}
+	},
 	"folders":
 	[
 		{
-			"path": "/home/ldenkewi-mint/Documents/larsqingtravel_website"
+			"path": "/home/ldenkewi-mint/Documents/ldenkewi-it_homepage"
+		},
+		{
+			"path": "."
 		},
 		{
 			"path": "/home/ldenkewi-mint/Documents/apache_home"
@@ -12,25 +47,5 @@
 	{
 		"tab_size": 3,
 		"translate_tabs_to_spaces": true
-	},
-	"SublimeLinter": {
-        "linters": {
-          "jsl": {
-            "@disable": false,
-            "args": [
-              "-conf", "${project}/jsl.conf"
-            ],
-            "chdir": "${project}",
-            "excludes": []
-          },
-          "jslint": {
-            "@disable": false,
-            "args": [
-              "-conf", "${project}/jsl.conf"
-            ],
-            "chdir": "${project}",
-            "excludes": []
-          }
-        }
-      }
+	}
 }

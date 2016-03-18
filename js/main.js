@@ -150,8 +150,8 @@ function getAllPostsAndMetaDataFromDBAsync(metaDataType) {
 function loadAllPosts() {
 	var order = $("body").attr("data-active-order");
 	if( order === undefined ) {
-		// default
-		order = "post_date";
+		// default - start-date
+		order = "start_date";
 		$("body").attr("data-active-order", order);
 	} else {
 		// clean up articles because the view is going to be refreshed
