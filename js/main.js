@@ -263,7 +263,7 @@ function buildPostContentByPostDate(data) {
 		var timeRangeObject = generatePostDateTimeRangeAndLable(post_date);
 
 		// if new article - grouped by country
-		if( !prevMonthAgo || timeRangeObject.monthAgo !== prevMonthAgo ) {
+		if( prevMonthAgo === undefined || timeRangeObject.monthAgo !== prevMonthAgo ) {
 			prevMonthAgo = timeRangeObject.monthAgo;
 
 			value.article_header = timeRangeObject.lable;
