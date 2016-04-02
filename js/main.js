@@ -239,7 +239,7 @@ function buildPostContentByStartDate(data) {
 	$(".to_delete").detach();
 
 	// after the DOM is completed, add the event handler
-	$('div.post').click(function() {
+	$("section>div.post").click(function() {
 		clickOnPostHandler($(this));
 	});
 }
@@ -290,7 +290,7 @@ function buildPostContentByPostDate(data) {
 	$(".to_delete").detach();
 
 	// after the DOM is completed, add the event handler
-	$("#"+prevMonthAgo+"month div.post").click(function() {
+	$("section>div.post").click(function() {
 		clickOnPostHandler($(this));
 	});
 }
